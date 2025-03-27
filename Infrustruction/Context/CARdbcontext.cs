@@ -17,5 +17,7 @@ namespace Infrustruction.Context
         }
 
         public DbSet<Information> informations { get; set; }
+        public DbSet<Car> Cars { get; set; }
+        public DbSet<CarCategory> CarCategories { get; set; }
     }
 }
