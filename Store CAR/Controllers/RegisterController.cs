@@ -119,7 +119,7 @@ namespace Store_CAR.Controllers
             try
             {
                 await _cARdbcontext.SaveChangesAsync();
-                return Ok("رمز عبور با موفقیت تغییر کرد");
+                return Ok("رمز عبور با یت تغییر کرد");
             }
             catch (Exception ex)
             {
