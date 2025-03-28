@@ -20,7 +20,7 @@ namespace Store_CAR.Controllers
             _cARdbcontext = cARdbcontext;
         }
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] Information information)
+        public async Task<IActionResult> Register([FromBody] User information)
         {
             information.Id = Guid.NewGuid();
             await _cARdbcontext.informations.AddAsync(information);

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Model
 {
-    public class Information
+    public class User
     {
-        public Information() { }
+        public User() { }
 
-        public Information(string name, string age, string national_Code,string password, string phonenumber ,string[] role, string otp) 
+        public User(string name, string age, string national_Code,string password, string phonenumber ,string[] role, string otp) 
         {
             Id = Guid.NewGuid();
             Name = name;
