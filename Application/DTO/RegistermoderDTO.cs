@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTO
 {
-    public class RegisterDTO
+    public class RegistermoderDTO
     {
 		public string Name { get; set; }
 		public string Age { get; set; }

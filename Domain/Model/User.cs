@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Model
 {
-    public class User
+    public abstract class User
     {
         public User() { }
 
-        public User(string name, string age, string national_Code,string password, string phonenumber ,string[] role, string otp) 
+        public User(string name, string age, string national_Code,string password, string phonenumber ,string[] role) 
         {
             Id = Guid.NewGuid();
             Name = name;
@@ -20,7 +20,6 @@ namespace Domain.Model
             Password = password;
             Phonenmber = phonenumber;
             Role = role;
-            Otp = otp;
         }
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -29,7 +28,7 @@ namespace Domain.Model
         public string Password { get; set; }
         public string Phonenmber { get; set; }
         public string[] Role { get; set; }
-        public string Otp { get; set; } // کد موقت برای بازنشانی رمز عبور
+        public string? Otp { get; set; } // کد موقت برای بازنشانی رمز عبور
         public DateTime? OtpExpiry { get; set; } // تاریخ انقضا کد یک بار مصرف
     }
 }

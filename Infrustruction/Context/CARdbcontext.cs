@@ -16,8 +16,26 @@ namespace Infrustruction.Context
             }
         }
 
-        public DbSet<User> informations { get; set; }
+       // public DbSet<User> informations { get; set; } // در ساختار TPT نمخواد که کلاس پدر رو درست کنی
+        public DbSet<Moder> moders { get; set; }
+        public DbSet<Seller> sellers { get; set; }
         public DbSet<Car> Cars { get; set; }
         public DbSet<CarCategory> CarCategories { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // پیکربندی TPT
+            modelBuilder.Entity<User>()
+                .ToTable("Users");
+
+            modelBuilder.Entity<Moder>()
+                .ToTable("Moders") // جدول فرعی
+                .HasBaseType<User>(); // وراثت TPT
+
+            modelBuilder.Entity<Seller>()
+                .ToTable("sellers")
+                .HasBaseType<User>();
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

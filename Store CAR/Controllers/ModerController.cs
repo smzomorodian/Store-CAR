@@ -12,25 +12,36 @@ namespace Store_CAR.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RegisterController : ControllerBase
+    public class ModerController : ControllerBase
     {
         private readonly CARdbcontext _cARdbcontext;
-        public RegisterController(CARdbcontext cARdbcontext)
+        public ModerController(CARdbcontext cARdbcontext)
         {
             _cARdbcontext = cARdbcontext;
         }
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] User information)
+        [HttpPost("Registermoder")]
+        public async Task<IActionResult> Register(RegistermoderDTO registermoderDTO)
         {
-            information.Id = Guid.NewGuid();
-            await _cARdbcontext.informations.AddAsync(information);
+            var moder = new Moder
+            {
+                Id = Guid.NewGuid(),
+                Name = registermoderDTO.Name,
+                Age = registermoderDTO.Age, // تبدیل `string` به `int`
+                National_Code = registermoderDTO.National_Code,
+                Password = registermoderDTO.Password,
+                Phonenmber = registermoderDTO.Phonenmber,
+                Role = registermoderDTO.Role/*.ToList()*/,
+                Otp = null // مقدار پیش‌فرض (می‌توانید مقداردهی کنید)
+            };
+            //information.Id = Guid.NewGuid();
+            await _cARdbcontext.moders.AddAsync(moder);
             await _cARdbcontext.SaveChangesAsync();
             return Ok();
         }
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LogingDTO logingDTO)
+        [HttpPost("Loginmoderonestage")]
+        public async Task<IActionResult> Login([FromBody] LogingmoderDTO logingmoderDTO)
         {
-            var user = await _cARdbcontext.informations.FirstOrDefaultAsync(x => x.Password == logingDTO.Password && x.Name == logingDTO.Name);
+            var user = await _cARdbcontext.moders.FirstOrDefaultAsync(x => x.Password == logingmoderDTO.Password && x.Name == logingmoderDTO.Name);
             if (user == null)
             {
                 return BadRequest("User not foun");
@@ -63,7 +74,7 @@ namespace Store_CAR.Controllers
                 return BadRequest("کدملی نمی‌تواند خالی باشد");
             }
 
-            var user = await _cARdbcontext.informations
+            var user = await _cARdbcontext.moders
                 .FirstOrDefaultAsync(i => i.National_Code == nationalCode);
             if (user == null)
             {
@@ -95,7 +106,7 @@ namespace Store_CAR.Controllers
                 return BadRequest("کدملی، کد موقت و رمز جدید نمی‌توانند خالی باشند");
             }
 
-            var user = await _cARdbcontext.informations
+            var user = await _cARdbcontext.moders
                 .FirstOrDefaultAsync(i => i.National_Code == request.NationalCode);
             if (user == null)
             {

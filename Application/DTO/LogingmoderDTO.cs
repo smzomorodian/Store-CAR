@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTO
 {
-    public class LogingDTO
+    public class LogingmoderDTO
     {
 		[Required]
 		public string Name { get; set; }

@@ -4,6 +4,7 @@ using Infrustruction.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrustruction.Migrations
 {
     [DbContext(typeof(CARdbcontext))]
-    partial class CARdbcontextModelSnapshot : ModelSnapshot
+    [Migration("20250328182515_nullotp")]
+    partial class nullotp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,13 +139,6 @@ namespace Infrustruction.Migrations
                     b.ToTable("Moders", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Model.Seller", b =>
-                {
-                    b.HasBaseType("Domain.Model.User");
-
-                    b.ToTable("sellers", (string)null);
-                });
-
             modelBuilder.Entity("Domain.Model.Car", b =>
                 {
                     b.HasOne("Domain.Model.CarCategory", "Category")
@@ -159,15 +155,6 @@ namespace Infrustruction.Migrations
                     b.HasOne("Domain.Model.User", null)
                         .WithOne()
                         .HasForeignKey("Domain.Model.Moder", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Model.Seller", b =>
-                {
-                    b.HasOne("Domain.Model.User", null)
-                        .WithOne()
-                        .HasForeignKey("Domain.Model.Seller", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
