@@ -118,5 +118,64 @@ namespace Store_CAR.Controllers
                 return StatusCode(500, $"خطا در تغییر رمز عبور: {ex.Message}");
             }
         }
+        [HttpPost("request-otp")]
+        public async Task<IActionResult> RequestOtp([FromBody] RequestOtpDTO request)
+        {
+            var user = await _cARdbcontext.sellers.FirstOrDefaultAsync(u => u.Phonenmber == request.Phonenumber);
+
+            if (user == null)
+                return NotFound("کاربر یافت نشد");
+
+            // ایجاد OTP و ذخیره در دیتابیس
+            var otp = new Random().Next(100000, 999999).ToString();
+            user.Otp = otp;
+            user.OtpExpiry = DateTime.UtcNow.AddMinutes(5); // اعتبار ۵ دقیقه
+
+            await _cARdbcontext.SaveChangesAsync();
+
+            // اینجا باید OTP را از طریق SMS یا ایمیل ارسال کنید (مثلا با Twilio یا SendGrid)
+
+            return Ok("OTP ارسال شد");
+        }
+
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDTO verifyRequest)
+        {
+            var user = await _cARdbcontext.sellers.FirstOrDefaultAsync(u => u.Phonenmber == verifyRequest.PhoneNumber);
+
+            if (user == null)
+                return NotFound("کاربر یافت نشد");
+
+            if (user.Otp == null || user.OtpExpiry < DateTime.UtcNow)
+                return BadRequest("OTP نامعتبر یا منقضی شده است");
+
+            if (user.Otp != verifyRequest.otp)
+                return BadRequest("OTP اشتباه است");
+
+            // پاک کردن OTP بعد از تأیید موفقیت‌آمیز
+            user.Otp = null;
+            user.OtpExpiry = null;
+            await _cARdbcontext.SaveChangesAsync();
+
+            return Ok("ورود موفقیت‌آمیز بود");
+        }
+        [HttpPut]
+        public async Task<IActionResult> editinformation([FromBody] RegistersellerDTO registersellerDTO)
+        {
+            var user = await _cARdbcontext.moders.FirstOrDefaultAsync(x => x.Password == registersellerDTO.Password);
+            if (user == null)
+            {
+                return BadRequest("User Not Found");
+            }
+            user.Name = registersellerDTO.Name;
+            user.Phonenmber = registersellerDTO.Phonenmber;
+            user.National_Code = registersellerDTO.National_Code;
+            user.Age = registersellerDTO.Age;
+            user.Password = registersellerDTO.Password;
+
+            await _cARdbcontext.SaveChangesAsync();
+            return NoContent();
+
+        }
     }
 }
