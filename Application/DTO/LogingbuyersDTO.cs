@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTO
 {
-    public class LogingsellerDTO
+    public class LogingbuyersDTO
     {
         [Required]
         public string Name { get; set; }

@@ -9,7 +9,7 @@ namespace Domain.Model
     public class Seller : User
     {
         public Seller() : base() { }
-        public Seller(string name, string age, string nationalcode, string password, string phonenumber, string[] role) 
+        public Seller(string name, string age, string nationalcode, string password, string phonenumber, string role) 
             : base(name, age, nationalcode, password, phonenumber, role) 
         {
 

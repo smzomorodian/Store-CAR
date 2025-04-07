@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store CAR", "Store CAR\Stor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{4BFCD973-A75C-4C83-86C4-51B1292B5F13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrustruction", "Infrustruction\Infrustruction.csproj", "{C83B7BFD-9587-483A-8769-4D66534A217A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrustructure", "Infrustructure\Infrustructure.csproj", "{C83B7BFD-9587-483A-8769-4D66534A217A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{3289E002-4D90-46CD-A842-845E4797FE95}"
 EndProject

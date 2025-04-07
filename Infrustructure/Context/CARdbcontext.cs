@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Model; // برای Information
 
-namespace Infrustruction.Context
+namespace Infrustructure.Context
 {
     public class CARdbcontext : DbContext
     {
@@ -16,9 +16,10 @@ namespace Infrustruction.Context
             }
         }
 
-       // public DbSet<User> informations { get; set; } // در ساختار TPT نمخواد که کلاس پدر رو درست کنی
+        // public DbSet<User> informations { get; set; } // در ساختار TPT نمخواد که کلاس پدر رو درست کنی
         public DbSet<Moder> moders { get; set; }
         public DbSet<Seller> sellers { get; set; }
+        public DbSet<Buyer> buyers { get; set; }
         public DbSet<Car> Cars { get; set; }
         public DbSet<CarCategory> CarCategories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -33,6 +34,10 @@ namespace Infrustruction.Context
 
             modelBuilder.Entity<Seller>()
                 .ToTable("sellers")
+                .HasBaseType<User>();
+
+            modelBuilder.Entity<Buyer>()
+                .ToTable("buyers")
                 .HasBaseType<User>();
 
             base.OnModelCreating(modelBuilder);

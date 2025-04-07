@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.DTO
 {
-    public class LogingsellerDTO
+    public class RegisterbuyerDTO
     {
-        [Required]
         public string Name { get; set; }
-        [Required]
+        public string Age { get; set; }
+        public string National_Code { get; set; }
         public string Password { get; set; }
-        [Required]
-        public string Nationalcode { get; set; }
+        public string Phonenmber { get; set; }
+        public string Role { get; set; }
     }
 }

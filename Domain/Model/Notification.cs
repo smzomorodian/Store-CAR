@@ -37,7 +37,7 @@
         public string Message { get; set; }       // متن پیام
         public DateTime CreatedAt { get; set; }   // زمان ایجاد
         public bool IsRead { get; set; }          // آیا خوانده شده است؟
-        public Customer Customer { get; set; }            // ارتباط با جدول کاربران
+        public Customer Customer { get; set; }    // ارتباط با جدول کاربران
         public int CarId { get; set; }            // شناسه خودرو
         public int CustomerId { get; set; }       // شناسه مشتری
     }

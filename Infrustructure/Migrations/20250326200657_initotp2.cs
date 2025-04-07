@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Infrustruction.Migrations
+namespace Infrustructure.Migrations
 {
     /// <inheritdoc />
     public partial class initotp2 : Migration
