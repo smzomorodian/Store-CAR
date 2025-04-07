@@ -1,7 +1,9 @@
-﻿using AutoMapper;
+﻿using Application.DTO;
+using AutoMapper;
 using Carproject.Command;
 using Carproject.DTO;
 using Carproject.Model;
+using Domain.Model;
 
 namespace Carproject
 {
