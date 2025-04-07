@@ -1,10 +1,31 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Carproject.Model;
+using System.Drawing;
 
 namespace Domain.Model
 {
     public class Car
     {
+        public void SetStatus(CarStatus status)
+        {
+            Status = status;
+        }
+
+        // کانستراکتور
+        public Car(string brand, string model, int year, string color, decimal price, string vin, CarStatus status, int categoryId, string name)
+        {
+            Brand = brand;
+            Model = model;
+            Year = year;
+            Color = color;
+            Price = price;
+            VIN = vin;
+            Status = status;
+            CategoryId = categoryId;
+            Files = new List<FileBase>();
+            Name = name;
+        }
         public enum CarStatus
         {
             New,
@@ -13,22 +34,27 @@ namespace Domain.Model
         }
 
         [Key]
-        public int Id { get; set; }
-        public string Brand { get; set; }
-        public string Model { get; set; }
-        public int Year { get; set; }
-        public string Color { get; set; }
-        public decimal Price { get; set; }
-        public string VIN { get; set; } // شماره شاسی
-        public string ImagePath { get; set; } // مسیر تصویر خودرو
+        public int Id { get; private set; }
 
-        public CarStatus Status { get; set; }  // اینجا وضعیت خودرو را مشخص می‌کنیم
-
-        //دسته‌بندی خودرو
-        public int CategoryId { get; set; }
+        public string Name { get; private set; }
+        public string Brand { get; private set; }
+        public string Model { get; private set; }
+        public int Year { get; private set; }
+        public string Color { get; private set; }
+        public decimal Price { get; private set; }
+        public string VIN { get; private set; } // شماره شاسی
+        public CarStatus Status { get; private set; }
+        public int CategoryId { get; private set; }
 
         [ForeignKey("CategoryId")]
-        public CarCategory Category { get; set; }
-    }
+        public CarCategory Category { get; private set; }
 
+        // اضافه کردن فیلد Files
+        public List<FileBase> Files { get; private set; } = new List<FileBase>(); // فرض بر این است که FileBase کلاسی از فایل‌ها باشد.
+
+        public Car()
+        {
+
+        }
+    }
 }
