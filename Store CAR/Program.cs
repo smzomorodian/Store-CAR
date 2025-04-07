@@ -1,4 +1,6 @@
-﻿using Infrustructure.Context;
+﻿using Carproject;
+using Infrustruction.Context;
+using Infrustructure.Context;
 using Infrustructure.Repository;
 using Infrustructure.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -66,6 +68,15 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IUserInfoRepository<>), typeof(UserInfoRepository<>));
+
+
+
+
+
+///ÇÊæãÑ
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 
+
 
 
 
