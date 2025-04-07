@@ -132,11 +132,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Carproject.Command;
-using Infrustruction.Context;
+
+using Carproject.Model;
 using Application.DTO;
 using Domain.Model;
 using static Domain.Model.Car;
-
+using Infrustruction.Context;
 
 namespace Carproject.Controllers
 {
@@ -157,21 +158,28 @@ namespace Carproject.Controllers
         [HttpPost]
         public async Task<ActionResult<CarDto>> PostCar([FromBody] CommandCar commandCar)
         {
+            // بررسی داده‌های ورودی
             if (commandCar == null) return BadRequest(new { message = "Invalid data." });
 
+            // بررسی اینکه آیا دسته‌بندی معتبر است
             if (!await _context.CarCategories.AnyAsync(c => c.Id == commandCar.CategoryId))
                 return BadRequest(new { message = "Invalid CategoryId" });
 
+            // نگاشت CommandCar به Car با استفاده از AutoMapper
             var car = _mapper.Map<Car>(commandCar);
-            car.Status = CarStatus.New;
 
+            // اضافه کردن خودرو به پایگاه داده
             _context.Cars.Add(car);
             await _context.SaveChangesAsync();
-            car = await _context.Cars.Include(c => c.Category)
-                            .FirstOrDefaultAsync(c => c.Id == car.Id);
+
+            // نگاشت خودرو به CarDto برای پاسخ‌دهی
             var carDto = _mapper.Map<CarDto>(car);
+
+            // برگرداندن خودرو جدید با استفاده از CreatedAtAction
             return CreatedAtAction(nameof(GetCar), new { id = car.Id }, carDto);
         }
+
+
 
         // ویرایش خودرو
         [HttpPut("{id}")]
