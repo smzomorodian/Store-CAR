@@ -1,3 +1,4 @@
+using Carproject;
 using Infrustruction.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,13 @@ builder.Services.AddDbContext<CARdbcontext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("CAR"))
 );
 builder.Services.AddControllers().AddNewtonsoftJson();
+
+///« Ê„Å—
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
