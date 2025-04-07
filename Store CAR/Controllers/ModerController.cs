@@ -48,24 +48,6 @@ namespace Store_CAR.Controllers
             }
             return Ok("Heloo");
         }
-        //[HttpPatch("change_Password")]
-        //public async Task<IActionResult> Changepassword(string nationalcode,[FromBody] JsonPatchDocument<Information> change)
-        //{
-        //    var informations = await _cARdbcontext.informations.FindAsync(nationalcode);
-        //    if (informations == null)
-        //    {
-        //        return BadRequest("user Not Found");
-        //    }
-        //    change.ApplyTo(informations, ModelState);
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //    await _cARdbcontext.SaveChangesAsync();
-        //    return NoContent();
-
-        //    // return HttpRequestOptionsKey()
-        //}
         [HttpPost("RequestPasswordReset")]
         public async Task<IActionResult> RequestPasswordReset(string nationalCode)
         {
@@ -136,6 +118,65 @@ namespace Store_CAR.Controllers
             {
                 return StatusCode(500, $"خطا در تغییر رمز عبور: {ex.Message}");
             }
+        }
+        [HttpPost("request-otp")]
+        public async Task<IActionResult> RequestOtp([FromBody] RequestOtpDTO request)
+        {
+            var user = await _cARdbcontext.moders.FirstOrDefaultAsync(u => u.Phonenmber == request.Phonenumber);
+
+            if (user == null)
+                return NotFound("کاربر یافت نشد");
+
+            // ایجاد OTP و ذخیره در دیتابیس
+            var otp = new Random().Next(100000, 999999).ToString();
+            user.Otp = otp;
+            user.OtpExpiry = DateTime.UtcNow.AddMinutes(5); // اعتبار ۵ دقیقه
+
+            await _cARdbcontext.SaveChangesAsync();
+
+            // اینجا باید OTP را از طریق SMS یا ایمیل ارسال کنید (مثلا با Twilio یا SendGrid)
+
+            return Ok("OTP ارسال شد");
+        }
+
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDTO verifyRequest)
+        {
+            var user = await _cARdbcontext.moders.FirstOrDefaultAsync(u => u.Phonenmber == verifyRequest.PhoneNumber);
+
+            if (user == null)
+                return NotFound("کاربر یافت نشد");
+
+            if (user.Otp == null || user.OtpExpiry < DateTime.UtcNow)
+                return BadRequest("OTP نامعتبر یا منقضی شده است");
+
+            if (user.Otp != verifyRequest.otp)
+                return BadRequest("OTP اشتباه است");
+
+            // پاک کردن OTP بعد از تأیید موفقیت‌آمیز
+            user.Otp = null;
+            user.OtpExpiry = null;
+            await _cARdbcontext.SaveChangesAsync();
+
+            return Ok("ورود موفقیت‌آمیز بود");
+        }
+        [HttpPut]
+        public async Task<IActionResult> editinformation([FromBody] RegistermoderDTO registermoderDTO)
+        {
+            var user = await _cARdbcontext.moders.FirstOrDefaultAsync(x => x.Password == registermoderDTO.Password);
+            if (user == null)
+            {
+                return BadRequest("User Not Found");
+            }
+            user.Name = registermoderDTO.Name;
+            user.Phonenmber = registermoderDTO.Phonenmber;
+            user.National_Code = registermoderDTO.National_Code;
+            user.Age = registermoderDTO.Age;
+            user.Password = registermoderDTO.Password;
+
+            await _cARdbcontext.SaveChangesAsync();
+            return NoContent();
+
         }
     }
 }
