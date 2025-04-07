@@ -15,7 +15,8 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 
 ///« Ê„Å—
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 
+
 
 
 
