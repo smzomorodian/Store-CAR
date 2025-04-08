@@ -1,4 +1,5 @@
 ﻿using Application.DTO;
+using AutoMapper;
 using Carproject.DTO;
 using Carproject.Model;
 using Domain.Model;
@@ -21,18 +22,21 @@ namespace Store_CAR.Controllers
     [ApiController]
     public class BuyerController : ControllerBase
     {
-        //private readonly CARdbcontext _cARdbcontext;
+        private readonly CARdbcontext _cARdbcontext;
         //private readonly IRepositoryBuyer _repositoryBuyer;
         private readonly IUserInfoRepository<Buyer> _userInfoRepository;
         private readonly IRepository<Buyer> _genericRepository;
         private string secretKey;
-        public BuyerController(/*IRepositoryBuyer repositoryBuyer,*/ IConfiguration configuration, IUserInfoRepository<Buyer> userInfoRepository, IRepository<Buyer> genericRepository)
+        //مپر رو اضافه کردم aa
+        private readonly IMapper _mapper;
+        public BuyerController(/*IRepositoryBuyer repositoryBuyer,*/ IConfiguration configuration, IUserInfoRepository<Buyer> userInfoRepository, IRepository<Buyer> genericRepository, CARdbcontext cARdbcontext, IMapper mapper)
         {
-            // _cARdbcontext = cARdbcontext;
+            _cARdbcontext = cARdbcontext;
             //_repositoryBuyer = repositoryBuyer;
             secretKey = configuration.GetValue<string>("ApiSettings:Secret");
             _userInfoRepository = userInfoRepository;
             _genericRepository = genericRepository;
+            _mapper = mapper;
         }
 
         [HttpPost("RegisterBuyer")]
@@ -240,7 +244,7 @@ namespace Store_CAR.Controllers
         [HttpGet("{id}/purchase-history")]
         public async Task<ActionResult<IEnumerable<PurchaseHistoryDto>>> GetPurchaseHistory(int id)
         {
-            var customer = await _context.Customers
+            var customer = await _cARdbcontext.buyers
                 .Include(c => c.PurchaseHistories)
                 .FirstOrDefaultAsync(c => c.CustomerId == id);
 
@@ -269,7 +273,7 @@ namespace Store_CAR.Controllers
         public async Task<ActionResult<PurchaseHistoryDto>> AddPurchaseHistory([FromBody] PurchaseHistoryDto purchaseHistoryDto)
         {
             // بررسی اینکه مشتری وجود دارد یا خیر
-            var customer = await _context.Customers.FindAsync(purchaseHistoryDto.CustomerId);
+            var customer = await _cARdbcontext.buyers.FindAsync(purchaseHistoryDto.CustomerId);
             if (customer == null)
                 return NotFound("Customer not found.");
 
@@ -298,13 +302,13 @@ namespace Store_CAR.Controllers
         [HttpPost("add-points")]
         public async Task<IActionResult> AddPointsToCustomer(int customerId, decimal purchaseAmount)
         {
-            var customer = await _context.Customers.FindAsync(customerId);
+            var customer = await _cARdbcontext.buyers.FindAsync(customerId);
             if (customer == null) return NotFound("Customer not found.");
 
             customer.Points += purchaseAmount / 1000;
             customer.LoyaltyStatus = GetLoyaltyStatus(customer.Points);
 
-            await _context.SaveChangesAsync();
+            await _cARdbcontext.SaveChangesAsync();
             return Ok(new { customer.Points, customer.LoyaltyStatus });
         }
     }
