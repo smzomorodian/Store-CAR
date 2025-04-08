@@ -1,13 +1,14 @@
 ﻿using Carproject.Model;
+using Infrustructure.Context;
 
 namespace Carproject.Services
 {
     public class NotificationService
     {
         //نوتیف سرویس قبلی
-        private readonly CarStoreDbContext _context;
+        private readonly CARdbcontext _context;
 
-        public NotificationService(CarStoreDbContext context)
+        public NotificationService(CARdbcontext context)
         {
             _context = context;
         }
