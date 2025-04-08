@@ -3,8 +3,9 @@
     public class Notification
     {
         // نوتیف برای اطللاع رسانی خودرو جدید
-        public Notification(string title, string message, DateTime createdAt, int carId, int customerId, Customer customer)
+        public Notification(string title, string message, DateTime createdAt, int carId, Guid customerId, Customer customer)
         {
+            Id = Guid.NewGuid();
             Title = title;
             Message = message;
             CreatedAt = createdAt;
@@ -13,8 +14,9 @@
             Customer = customer;
         }
 
-        public Notification(string title, string message, DateTime createdAt, int carId, int customerId)
+        public Notification(string title, string message, DateTime createdAt, int carId, Guid customerId)
         {
+            Id = Guid.NewGuid();
             Title = title;
             Message = message;
             CreatedAt = createdAt;
@@ -24,21 +26,22 @@
 
 
         // نوتیف برای فروش جدید 
-        public Notification(string title, string message, DateTime createdAt, int customerId)
+        public Notification(string title, string message, DateTime createdAt, Guid customerId)
         {
+            Id = Guid.NewGuid();
             Title = title;
             Message = message;
             CreatedAt = createdAt;
             CustomerId = customerId;
         }
 
-        public int Id { get; set; }               // شناسه نوتیفیکیشن
+        public Guid Id { get; set; }               // شناسه نوتیفیکیشن
         public string Title { get; set; }         // عنوان نوتیفیکیشن
         public string Message { get; set; }       // متن پیام
         public DateTime CreatedAt { get; set; }   // زمان ایجاد
         public bool IsRead { get; set; }          // آیا خوانده شده است؟
         public Customer Customer { get; set; }    // ارتباط با جدول کاربران
         public int CarId { get; set; }            // شناسه خودرو
-        public int CustomerId { get; set; }       // شناسه مشتری
+        public Guid CustomerId { get; set; }       // شناسه مشتری
     }
 }

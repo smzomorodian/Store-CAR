@@ -1,0 +1,102 @@
+﻿using AutoMapper;
+using Carproject.DTO;
+using Infrustructure.Context;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace Carproject.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ReportController : ControllerBase
+    {
+        private readonly CARdbcontext  _context;
+        private readonly IMapper _mapper;
+
+        public ReportController(CARdbcontext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+
+        [HttpGet("sales-report")]
+        public async Task<ActionResult<IEnumerable<SalesReportDto>>> GetSalesReport(DateTime startDate, DateTime endDate)
+        {
+            // فیلتر کردن فروش‌ها در بازه زمانی مشخص شده
+            var sales = await _context.PurchaseHistories
+                .Where(p => p.PurchaseDate >= startDate && p.PurchaseDate <= endDate)
+                .ToListAsync();
+
+            if (sales == null || sales.Count == 0)
+            {
+                return NotFound("No sales found for the given date range.");
+            }
+
+            // گروه‌بندی فروش‌ها بر اساس تاریخ خرید
+            var salesReport = await _context.PurchaseHistories
+                            .Where(p => p.PurchaseDate >= startDate && p.PurchaseDate <= endDate)
+                            .GroupBy(p => p.PurchaseDate.Date)
+                            .Select(g => new SalesReportDto
+                            {
+                                Date = g.Key,
+                                TotalSales = g.Sum(s => s.PurchaseAmount),
+                                NumberOfSales = g.Count()
+                            }).ToListAsync();
+
+            return Ok(salesReport);
+        }
+
+
+
+
+        [HttpGet("profit-loss-report")]
+        public async Task<ActionResult<ProfitLossReportDto>> GetProfitLossReport(DateTime startDate, DateTime endDate)
+        {
+            // محاسبه درآمدها (فروش‌ها)
+            var sales = await _context.Sales
+                .Where(s => s.SaleDate >= startDate && s.SaleDate <= endDate)
+                .SumAsync(s => s.Amount);
+
+            // محاسبه هزینه‌ها
+            var expenses = await _context.Expenses
+                .Where(e => e.Date >= startDate && e.Date <= endDate)
+                .SumAsync(e => e.Amount);
+
+            // محاسبه سود ناخالص و سود خالص
+            var grossProfit = sales - expenses; // فرض بر این است که همه هزینه‌ها مربوط به تولید و فروش است
+
+            // ممکن است هزینه‌های عملیاتی و مالیات هم نیاز باشد
+            var operatingExpenses = await _context.OperatingExpenses
+                .Where(o => o.Date >= startDate && o.Date <= endDate)
+                .SumAsync(o => o.Amount);
+
+            var netProfit = grossProfit - operatingExpenses;
+
+            // ساخت گزارش و ارسال پاسخ
+            var report = new ProfitLossReportDto
+            {
+                TotalSales = sales,
+                TotalExpenses = expenses,
+                GrossProfit = grossProfit,
+                OperatingExpenses = operatingExpenses,
+                NetProfit = netProfit
+            };
+
+            return Ok(report);
+        }
+
+        [HttpGet("total-sales")]
+        public async Task<ActionResult<decimal>> GetTotalSales()
+        {
+            var totalSales = await _context.Sales.SumAsync(s => s.Amount);
+            return Ok(totalSales);
+        }
+
+
+
+
+
+
+
+    }
+}

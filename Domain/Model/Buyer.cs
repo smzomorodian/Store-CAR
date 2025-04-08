@@ -1,4 +1,5 @@
-﻿using Domain.Model;
+﻿using Carproject.Model;
+using Domain.Model;
 using FirebaseAdmin.Auth;
 public class Buyer : User
 {
@@ -8,5 +9,18 @@ public class Buyer : User
         : base(name, age, nationalcode, password, phonenumber, role)
     {
     }
+
+
+
+
+    /// امیرعلی اضافه کردم
+    public List<PurchaseHistory> PurchaseHistories { get; set; } // تاریخچه خرید
+    public LoyaltyStatus LoyaltyStatus { get; set; } // وضعیت وفاداری مشتری
+    public decimal Points { get; set; } // امتیاز مشتری
+
+
+    // 🔹 فیلد جدید برای ذخیره علاقه مشتری به دسته‌بندی خودرو با ارتباط چند به چند
+    public List<CustomerCategory> InterestedCategories { get; set; } = new();
+    // مثال: "SUV" یا "Sedan"
 
 }
