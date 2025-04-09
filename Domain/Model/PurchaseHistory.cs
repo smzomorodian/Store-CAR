@@ -2,7 +2,7 @@
 {
     public class PurchaseHistory
     {
-        public PurchaseHistory(int customerId, DateTime purchaseDate, decimal purchaseAmount, string productName)
+        public PurchaseHistory(Guid customerId, DateTime purchaseDate, decimal purchaseAmount, string productName)
         {
             CustomerId = customerId;
             PurchaseDate = purchaseDate;
@@ -10,8 +10,8 @@
             ProductName = productName;
         }
 
-        public int PurchaseHistoryId { get; set; }
-        public int CustomerId { get; set; }
+        public Guid PurchaseHistoryId { get; set; }
+        public Guid CustomerId { get; set; }
         public DateTime PurchaseDate { get; set; }
         public decimal PurchaseAmount { get; set; } // مبلغ خرید
         public string ProductName { get; set; }

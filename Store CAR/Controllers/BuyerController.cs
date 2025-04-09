@@ -26,10 +26,13 @@ namespace Store_CAR.Controllers
         //private readonly IRepositoryBuyer _repositoryBuyer;
         private readonly IUserInfoRepository<Buyer> _userInfoRepository;
         private readonly IRepository<Buyer> _genericRepository;
+        private readonly IRepository<PurchaseHistory> _PurchaseHistory;
+
+
         private string secretKey;
         //مپر رو اضافه کردم aa
         private readonly IMapper _mapper;
-        public BuyerController(/*IRepositoryBuyer repositoryBuyer,*/ IConfiguration configuration, IUserInfoRepository<Buyer> userInfoRepository, IRepository<Buyer> genericRepository, CARdbcontext cARdbcontext, IMapper mapper)
+        public BuyerController(/*IRepositoryBuyer repositoryBuyer,*/ IConfiguration configuration, IUserInfoRepository<Buyer> userInfoRepository, IRepository<Buyer> genericRepository, CARdbcontext cARdbcontext, IMapper mapper, IRepository<PurchaseHistory> purchaseHistory)
         {
             _cARdbcontext = cARdbcontext;
             //_repositoryBuyer = repositoryBuyer;
@@ -37,6 +40,7 @@ namespace Store_CAR.Controllers
             _userInfoRepository = userInfoRepository;
             _genericRepository = genericRepository;
             _mapper = mapper;
+            _PurchaseHistory = purchaseHistory;
         }
 
         [HttpPost("RegisterBuyer")]
@@ -242,11 +246,11 @@ namespace Store_CAR.Controllers
         }
 
         [HttpGet("{id}/purchase-history")]
-        public async Task<ActionResult<IEnumerable<PurchaseHistoryDto>>> GetPurchaseHistory(int id)
+        public async Task<ActionResult<IEnumerable<PurchaseHistoryDto>>> GetPurchaseHistory(Guid id)
         {
             var customer = await _cARdbcontext.buyers
                 .Include(c => c.PurchaseHistories)
-                .FirstOrDefaultAsync(c => c.CustomerId == id);
+                .FirstOrDefaultAsync(c => c.Id == id);
 
             if (customer == null)
                 return NotFound("Customer not found.");
@@ -281,8 +285,8 @@ namespace Store_CAR.Controllers
 
 
             // افزودن سابقه خرید به پایگاه داده
-            _genericRepository.AddAsync(purchaseHistory);
-            await _genericRepository.SavechangeAsync();
+            await _PurchaseHistory.AddAsync(purchaseHistory);
+            await _PurchaseHistory.SavechangeAsync();
 
             // تبدیل PurchaseHistory به PurchaseHistoryDto و بازگشت داده‌ها
             var result = _mapper.Map<PurchaseHistoryDto>(purchaseHistory);
