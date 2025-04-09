@@ -14,7 +14,7 @@ namespace Domain.Model
     {
         public User() { }
 
-        public User(string name, string age, string national_Code, string password, string phonenumber, string role)
+        public User(string name, string age, string national_Code, string password, string phonenumber, string role, string email)
         {
             Id = Guid.NewGuid();
             Name = name;
@@ -23,6 +23,7 @@ namespace Domain.Model
             this.password = password;
             this.phonenumber = phonenumber;
             Role = role;
+            Email = email;
         }
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -31,6 +32,8 @@ namespace Domain.Model
         public string password { get; set; }
         public string phonenumber { get; set; }
         public string Role { get; set; }
+
+        public string Email { get; set; }
         public string? Otp { get; set; } // کد موقت برای بازنشانی رمز عبور
         public DateTime? OtpExpiry { get; set; } // تاریخ انقضا کد یک بار مصرف
 

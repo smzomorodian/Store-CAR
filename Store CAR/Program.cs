@@ -1,4 +1,5 @@
-﻿using Carproject;
+﻿using Application.Services;
+using Carproject;
 using Infrustructure.Context;
 using Infrustructure.Repository;
 using Infrustructure.Repository.IRepository;
@@ -69,6 +70,11 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IUserInfoRepository<>), typeof(UserInfoRepository<>));
 
 
+//Email 
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+//اضافه کردن سرویس SaleNotificationService
+builder.Services.AddScoped<ISaleNotificationService, SaleNotificationService>();
 
 
 

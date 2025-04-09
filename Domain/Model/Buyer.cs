@@ -5,8 +5,8 @@ public class Buyer : User
 {
     public Buyer() { }
 
-    public Buyer(string name, string age, string nationalcode, string password, string phonenumber, string role)
-        : base(name, age, nationalcode, password, phonenumber, role)
+    public Buyer(string name, string age, string nationalcode, string password, string phonenumber, string role, string Email)
+        : base(name, age, nationalcode, password, phonenumber, role,Email)
     {
     }
 
