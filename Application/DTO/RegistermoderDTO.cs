@@ -13,6 +13,7 @@ namespace Application.DTO
 		public string National_Code { get; set; }
         public string Password { get; set; }
         public string Phonenmber { get; set; }
+		public string Email { get; set; }
 		public string Role { get; set; }
 	}
 }
