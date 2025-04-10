@@ -4,6 +4,7 @@ using Infrustructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrustructure.Migrations
 {
     [DbContext(typeof(CARdbcontext))]
-    partial class CARdbcontextModelSnapshot : ModelSnapshot
+    [Migration("20250410063627_Car")]
+    partial class Car
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,15 +242,13 @@ namespace Infrustructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("SaleDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BuyerId");
 
                     b.ToTable("Sales");
                 });
@@ -442,17 +443,6 @@ namespace Infrustructure.Migrations
                         .HasForeignKey("CustomerId1");
                 });
 
-            modelBuilder.Entity("Carproject.Model.Sale", b =>
-                {
-                    b.HasOne("Buyer", "Buyer")
-                        .WithMany("Sales")
-                        .HasForeignKey("BuyerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Buyer");
-                });
-
             modelBuilder.Entity("Domain.Model.Car", b =>
                 {
                     b.HasOne("Domain.Model.CarCategory", "Category")
@@ -508,8 +498,6 @@ namespace Infrustructure.Migrations
                     b.Navigation("InterestedCategories");
 
                     b.Navigation("PurchaseHistories");
-
-                    b.Navigation("Sales");
                 });
 #pragma warning restore 612, 618
         }

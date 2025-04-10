@@ -15,6 +15,7 @@ namespace Infrustructure.Context
             {
                 optionsBuilder.UseSqlServer("Server=localhost;Database=CARDB;Trusted_Connection=True;");
             }
+
         }
 
         // public DbSet<User> informations { get; set; } // در ساختار TPT نمخواد که کلاس پدر رو درست کنی
@@ -47,6 +48,11 @@ namespace Infrustructure.Context
             modelBuilder.Entity<Buyer>()
                 .ToTable("buyers")
                 .HasBaseType<User>();
+
+             modelBuilder.Entity<Sale>()
+            .HasOne(s => s.Buyer)
+            .WithMany(c => c.Sales)
+            .HasForeignKey(s => s.BuyerId);
 
             base.OnModelCreating(modelBuilder);
         }

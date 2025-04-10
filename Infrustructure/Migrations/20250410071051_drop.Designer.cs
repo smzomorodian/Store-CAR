@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrustructure.Migrations
 {
     [DbContext(typeof(CARdbcontext))]
-    [Migration("20250409044245_UpdateCarCategoriesTable")]
-    partial class UpdateCarCategoriesTable
+    [Migration("20250410071051_drop")]
+    partial class drop
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -242,13 +242,15 @@ namespace Infrustructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("SaleDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BuyerId");
 
                     b.ToTable("Sales");
                 });
@@ -443,6 +445,17 @@ namespace Infrustructure.Migrations
                         .HasForeignKey("CustomerId1");
                 });
 
+            modelBuilder.Entity("Carproject.Model.Sale", b =>
+                {
+                    b.HasOne("Buyer", "Buyer")
+                        .WithMany("Sales")
+                        .HasForeignKey("BuyerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Buyer");
+                });
+
             modelBuilder.Entity("Domain.Model.Car", b =>
                 {
                     b.HasOne("Domain.Model.CarCategory", "Category")
@@ -498,6 +511,8 @@ namespace Infrustructure.Migrations
                     b.Navigation("InterestedCategories");
 
                     b.Navigation("PurchaseHistories");
+
+                    b.Navigation("Sales");
                 });
 #pragma warning restore 612, 618
         }

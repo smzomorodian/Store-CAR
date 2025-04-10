@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrustructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateCarCategoriesTable : Migration
+    public partial class Car : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

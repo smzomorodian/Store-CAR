@@ -23,4 +23,7 @@ public class Buyer : User
     public List<CustomerCategory> InterestedCategories { get; set; } = new();
     // مثال: "SUV" یا "Sedan"
 
+    //مدل سیل
+    public ICollection<Sale> Sales { get; set; }
+
 }

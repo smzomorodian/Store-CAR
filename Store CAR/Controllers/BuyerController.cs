@@ -57,6 +57,7 @@ namespace Store_CAR.Controllers
                 password = hashedPassword,
                 phonenumber = registerbuyerDTO.Phonenmber,
                 Role = registerbuyerDTO.Role,
+                Email = registerbuyerDTO.Email,
                 Otp = null
             };
             await _genericRepository.AddAsync(buyer);

@@ -26,15 +26,15 @@ namespace Application.Services
             var sale = await _context.Sales.FirstOrDefaultAsync(s => s.Id == saleId);
             if (sale == null) throw new Exception("فروش یافت نشد.");
 
-            var customer = await _context.buyers.FirstOrDefaultAsync(c => c.Id == sale.Id);
-            if (customer == null) throw new Exception("مشتری یافت نشد.");
+            var buyer = await _context.buyers.FirstOrDefaultAsync(c => c.Id == sale.BuyerId);
+            if (buyer == null) throw new Exception("مشتری یافت نشد.");
 
             // ایجاد نوتیفیکیشن
             var notification = new Notification(
                 "فروش جدید",
                 $"یک خودرو به مبلغ {sale.Amount} با شناسه فروش {sale.Id} فروخته شد.",
                 DateTime.Now,
-                customer.Id
+                buyer.Id
             );
 
             _context.Notifications.Add(notification);
@@ -43,7 +43,7 @@ namespace Application.Services
             // ارسال ایمیل
             var emailRequest = new Email
             {
-                To = customer.Email, // فرض: Email داخل مدل customer هست
+                To = buyer.Email, // فرض: Email داخل مدل customer هست
                 Subject = "تأیید خرید",
                 Body = $"<html><body>با تشکر از خرید شما. مبلغ خرید: {sale.Amount}</body></html>"
             };

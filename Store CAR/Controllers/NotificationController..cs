@@ -15,14 +15,14 @@ namespace Carproject.Controllers
     {
         private readonly CARdbcontext _context;
         private readonly IMapper _mapper;
-        private readonly NotificationService _notificationService;
-        private readonly SaleNotificationService _saleNotificationService;
+        //private readonly NotificationService _notificationService;
+        private readonly ISaleNotificationService _saleNotificationService;
 
-        public NotificationController(CARdbcontext context, IMapper mapper, NotificationService notificationService, SaleNotificationService saleNotificationService)
+        public NotificationController(CARdbcontext context, IMapper mapper, ISaleNotificationService saleNotificationService)
         {
             _context = context;
             _mapper = mapper;
-            _notificationService = notificationService;
+            //_notificationService = notificationService;
             _saleNotificationService = saleNotificationService;
         }
 
