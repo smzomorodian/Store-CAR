@@ -3,7 +3,7 @@
     public class Notification
     {
         // نوتیف برای اطللاع رسانی خودرو جدید
-        public Notification(string title, string message, DateTime createdAt, int carId, Guid customerId, Customer customer)
+        public Notification(string title, string message, DateTime createdAt, Guid carId, Guid customerId, Customer customer)
         {
             Id = Guid.NewGuid();
             Title = title;
@@ -14,7 +14,7 @@
             Customer = customer;
         }
 
-        public Notification(string title, string message, DateTime createdAt, int carId, Guid customerId)
+        public Notification(string title, string message, DateTime createdAt, Guid carId, Guid customerId)
         {
             Id = Guid.NewGuid();
             Title = title;
@@ -41,7 +41,7 @@
         public DateTime CreatedAt { get; set; }   // زمان ایجاد
         public bool IsRead { get; set; }          // آیا خوانده شده است؟
         public Customer Customer { get; set; }    // ارتباط با جدول کاربران
-        public int CarId { get; set; }            // شناسه خودرو
+        public Guid CarId { get; set; }            // شناسه خودرو
         public Guid CustomerId { get; set; }       // شناسه مشتری
     }
 }

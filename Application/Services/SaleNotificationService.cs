@@ -34,12 +34,14 @@ namespace Application.Services
                 "فروش جدید",
                 $"یک خودرو به مبلغ {sale.Amount} با شناسه فروش {sale.Id} فروخته شد.",
                 DateTime.Now,
+                sale.CarId,
                 buyer.Id
             );
-
-            _context.Notifications.Add(notification);
-            await _context.SaveChangesAsync();
-
+           
+                _context.Notifications.Add(notification);
+                await _context.SaveChangesAsync();
+            
+               
             // ارسال ایمیل
             var emailRequest = new Email
             {

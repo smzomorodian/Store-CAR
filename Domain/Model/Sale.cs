@@ -15,6 +15,7 @@
         public DateTime SaleDate { get; set; }    // تاریخ فروش
         public decimal Amount { get; set; }       // مبلغ فروش
         public Guid BuyerId { get; set; }       // شناسه مشتری
+        public Guid CarId { get; set; }       // شناسه مشتری
         public Buyer Buyer { get; set; }       // شناسه مشتری
 
         public Sale()
