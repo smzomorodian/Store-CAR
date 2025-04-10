@@ -151,7 +151,7 @@ namespace Carproject.Controllers
         public CarController(CARdbcontext context, IMapper mapper)
         {
             _context = context;
-            _mapper = mapper;
+            _mapper = mapper; 
         }
 
         // اضافه کردن خودرو
