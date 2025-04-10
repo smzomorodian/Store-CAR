@@ -15,7 +15,6 @@ namespace Application.Command.User.Command
         {
             this.nationalCode = nationalCode;
         }
-
         public RequestPasswordResetCommand() { }
     }
 }

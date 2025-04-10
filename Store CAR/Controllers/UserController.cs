@@ -148,45 +148,45 @@ namespace Store_CAR.Controllers
         }
 
 
-        [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] ChangepasswordDTo request)
-        {
-            if (request == null || string.IsNullOrEmpty(request.NationalCode) ||
-                string.IsNullOrEmpty(request.Otp) || string.IsNullOrEmpty(request.NewPassword))
-            {
-                return BadRequest("کدملی، کد موقت و رمز جدید نمی‌توانند خالی باشند");
-            }
+        //[HttpPost("ResetPassword")]
+        //public async Task<IActionResult> ResetPassword([FromBody] ChangepasswordDTo request)
+        //{
+        //    if (request == null || string.IsNullOrEmpty(request.NationalCode) ||
+        //        string.IsNullOrEmpty(request.Otp) || string.IsNullOrEmpty(request.NewPassword))
+        //    {
+        //        return BadRequest("کدملی، کد موقت و رمز جدید نمی‌توانند خالی باشند");
+        //    }
 
-            var user = await _userInfoRepository.getnationalcode(request.NationalCode);
-            if (user == null)
-            {
-                return NotFound("کاربری با این کدملی پیدا نشد");
-            }
+        //    var user = await _userInfoRepository.getnationalcode(request.NationalCode);
+        //    if (user == null)
+        //    {
+        //        return NotFound("کاربری با این کدملی پیدا نشد");
+        //    }
 
-            if (user.Otp != request.Otp)
-            {
-                return BadRequest("کد موقت اشتباه است");
-            }
+        //    if (user.Otp != request.Otp)
+        //    {
+        //        return BadRequest("کد موقت اشتباه است");
+        //    }
 
-            if (!user.OtpExpiry.HasValue || user.OtpExpiry < DateTime.Now)
-            {
-                return BadRequest("کد موقت منقضی شده است");
-            }
+        //    if (!user.OtpExpiry.HasValue || user.OtpExpiry < DateTime.Now)
+        //    {
+        //        return BadRequest("کد موقت منقضی شده است");
+        //    }
 
-            user.password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
-            user.Otp = null;
-            user.OtpExpiry = null;
+        //    user.password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+        //    user.Otp = null;
+        //    user.OtpExpiry = null;
 
-            try
-            {
-                await _genericRepository.SavechangeAsync();
-                return Ok("رز عبور با یت تغییر کرد");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"خطا در تغییر رمز عبور: {ex.Message}");
-            }
-        }
+        //    try
+        //    {
+        //        await _genericRepository.SavechangeAsync();
+        //        return Ok("رز عبور با یت تغییر کرد");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"خطا در تغییر رمز عبور: {ex.Message}");
+        //    }
+        //}
 
 
 
