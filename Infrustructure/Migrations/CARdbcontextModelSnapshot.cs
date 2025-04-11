@@ -152,9 +152,6 @@ namespace Infrustructure.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CustomerId1")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
@@ -166,9 +163,12 @@ namespace Infrustructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Notifications");
                 });
@@ -423,13 +423,11 @@ namespace Infrustructure.Migrations
 
             modelBuilder.Entity("Carproject.Model.Notification", b =>
                 {
-                    b.HasOne("Carproject.Model.Customer", "Customer")
+                    b.HasOne("Domain.Model.User", "User")
                         .WithMany()
-                        .HasForeignKey("CustomerId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
-                    b.Navigation("Customer");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Carproject.Model.PurchaseHistory", b =>
