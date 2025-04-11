@@ -30,6 +30,7 @@ namespace Application.Command.User.CommandHandler
                 nationalcode = request.National_Code,
                 password = request.Password,
                 phonenumber = request.Phonenmber,
+                Email = request.Email,
                 Role = request.Role,
                 Otp = null
             };

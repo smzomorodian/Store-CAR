@@ -59,6 +59,7 @@ namespace Store_CAR.Controllers
                         National_Code = registerbuyerDTO.National_Code,
                         Password = BCrypt.Net.BCrypt.HashPassword(registerbuyerDTO.Password),
                         Phonenmber = registerbuyerDTO.Phonenmber,
+                        Email = registerbuyerDTO.Email,
                         Role = registerbuyerDTO.Role
 
                     };
@@ -72,6 +73,7 @@ namespace Store_CAR.Controllers
                         National_Code = registerbuyerDTO.National_Code,
                         Password = registerbuyerDTO.Password,
                         Phonenmber = registerbuyerDTO.Phonenmber,
+                        Email = registerbuyerDTO.Email,
                         Role = registerbuyerDTO.Role
 
                     };
@@ -85,6 +87,7 @@ namespace Store_CAR.Controllers
                         National_Code = registerbuyerDTO.National_Code,
                         Password = registerbuyerDTO.Password,
                         Phonenmber = registerbuyerDTO.Phonenmber,
+                        Email = registerbuyerDTO.Email,
                         Role = registerbuyerDTO.Role
                     };
                     result = await _mediator.Send(commandmoder);
