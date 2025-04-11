@@ -71,7 +71,7 @@ namespace Store_CAR.Controllers
                         Name = registerbuyerDTO.Name,
                         Age = registerbuyerDTO.Age,
                         National_Code = registerbuyerDTO.National_Code,
-                        Password = registerbuyerDTO.Password,
+                        Password = BCrypt.Net.BCrypt.HashPassword(registerbuyerDTO.Password),
                         Phonenmber = registerbuyerDTO.Phonenmber,
                         Email = registerbuyerDTO.Email,
                         Role = registerbuyerDTO.Role
@@ -80,12 +80,12 @@ namespace Store_CAR.Controllers
                     result = await _mediator.Send(commandseller);
                     break;
                 case "moder":
-                    var commandmoder = new UserRegisterCommand<Seller>
+                    var commandmoder = new UserRegisterCommand<Moder>
                     {
                         Name = registerbuyerDTO.Name,
                         Age = registerbuyerDTO.Age,
                         National_Code = registerbuyerDTO.National_Code,
-                        Password = registerbuyerDTO.Password,
+                        Password = BCrypt.Net.BCrypt.HashPassword(registerbuyerDTO.Password),
                         Phonenmber = registerbuyerDTO.Phonenmber,
                         Email = registerbuyerDTO.Email,
                         Role = registerbuyerDTO.Role
@@ -104,7 +104,7 @@ namespace Store_CAR.Controllers
 
         [HttpPost("Loginonestage/{userType}")]
       //[Authorize(Roles = "buyer, moder, seller")]
-        public async Task<IActionResult> Login(string userType,[FromBody] LogingbuyersDTO logingbuyersDTO)
+        public async Task<IActionResult> Login(string userType,[FromBody] LogingUserDTO logingUserDTO)
         {
             string Token;
             string userTypeclean = userType;
@@ -113,8 +113,8 @@ namespace Store_CAR.Controllers
                 case "buyer":
                     var commandbuyer = new UserLoginCommand<Buyer>
                     {
-                        Nationalcode = logingbuyersDTO.Nationalcode,
-                        Password =logingbuyersDTO.Password
+                        Nationalcode = logingUserDTO.Nationalcode,
+                        Password = logingUserDTO.Password
                     };
                     Token = await _mediator.Send(commandbuyer);
                     break;
@@ -122,16 +122,16 @@ namespace Store_CAR.Controllers
                 case "seller":
                     var commandseller = new UserLoginCommand<Seller>
                     {
-                        Nationalcode = logingbuyersDTO.Nationalcode,
-                        Password = logingbuyersDTO.Password
+                        Nationalcode = logingUserDTO.Nationalcode,
+                        Password = logingUserDTO.Password
                     };
                     Token = await _mediator.Send(commandseller);
                     break;
                 case "moder":
                     var commandmoder = new UserLoginCommand<Moder>
                     {
-                        Nationalcode = logingbuyersDTO.Nationalcode,
-                        Password = logingbuyersDTO.Password
+                        Nationalcode = logingUserDTO.Nationalcode,
+                        Password = logingUserDTO.Password
                     };
                     Token = await _mediator.Send(commandmoder);
                     break;
@@ -141,67 +141,75 @@ namespace Store_CAR.Controllers
             return Ok(new { token = Token });
         }
 
-        [HttpPost("RequestPasswordReset")]
-        public async Task<IActionResult> RequestPasswordReset(string nationalCode)
+        [HttpPost("RequestPasswordReset/{userType}")]
+        public async Task<IActionResult> RequestPasswordReset(string userType, [FromQuery] string nationalCode)
         {
-            var command = new RequestPasswordResetCommand<User> 
-            { nationalCode = nationalCode };
-            var user =await _mediator.Send(command);
-            return Ok(user);
+            string userTypeClean = userType.Trim().ToLower();
+            string otp;
+
+            switch (userTypeClean)
+            {
+                case "buyer":
+                    var commandbuyer = new RequestPasswordResetCommand<Buyer> { nationalCode = nationalCode };
+                    otp = await _mediator.Send(commandbuyer);
+                    break;
+                case "seller":
+                    var commandseller = new RequestPasswordResetCommand<Seller> { nationalCode = nationalCode };
+                    otp = await _mediator.Send(commandseller);
+                    break;
+                case "moder":
+                    var commandmoder = new RequestPasswordResetCommand<Moder> { nationalCode = nationalCode };
+                    otp = await _mediator.Send(commandmoder);
+                    break;
+                default:
+                    return BadRequest("نوع کاربر نامعتبر است.");
+            }
+
+            return Ok("کد موقت ارسال شد");
         }
 
 
-        //[HttpPost("ResetPassword")]
-        //public async Task<IActionResult> ResetPassword([FromBody] ChangepasswordDTo request)
-        //{
-        //    if (request == null || string.IsNullOrEmpty(request.NationalCode) ||
-        //        string.IsNullOrEmpty(request.Otp) || string.IsNullOrEmpty(request.NewPassword))
-        //    {
-        //        return BadRequest("کدملی، کد موقت و رمز جدید نمی‌توانند خالی باشند");
-        //    }
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(string userType , [FromBody] ChangepasswordDTo request)
+        {
+            string userTypeClean = userType.Trim().ToLower();
+            string result;
 
-        //    var user = await _userInfoRepository.getnationalcode(request.NationalCode);
-        //    if (user == null)
-        //    {
-        //        return NotFound("کاربری با این کدملی پیدا نشد");
-        //    }
+            switch (userTypeClean)
+            {
+                case "buyer":
+                    var commandbuyer = new ChangePasswordcommand<Buyer>
+                    {
+                        NationalCode = request.NationalCode,
+                        Otp = request.Otp,
+                        NewPassword = request.NewPassword
+                    };
+                    result = await _mediator.Send(commandbuyer);
+                    break;
+                case "seller":
+                    var commandseller = new ChangePasswordcommand<Seller>
+                    {
+                        NationalCode = request.NationalCode,
+                        Otp = request.Otp,
+                        NewPassword = request.NewPassword
+                    };
+                    result = await _mediator.Send(commandseller);
+                    break;
+                case "moder":
+                    var commandmoder = new ChangePasswordcommand<Moder>
+                    {
+                        NationalCode = request.NationalCode,
+                        Otp = request.Otp,
+                        NewPassword = request.NewPassword
+                    };
+                    result = await _mediator.Send(commandmoder);
+                    break;
+                default:
+                    return BadRequest("نوع کاربر نامعتبر است.");
+            }
+            return Ok("change passwod is succesfuly");
 
-        //    if (user.Otp != request.Otp)
-        //    {
-        //        return BadRequest("کد موقت اشتباه است");
-        //    }
-
-        //    if (!user.OtpExpiry.HasValue || user.OtpExpiry < DateTime.Now)
-        //    {
-        //        return BadRequest("کد موقت منقضی شده است");
-        //    }
-
-        //    user.password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
-        //    user.Otp = null;
-        //    user.OtpExpiry = null;
-
-        //    try
-        //    {
-        //        await _genericRepository.SavechangeAsync();
-        //        return Ok("رز عبور با یت تغییر کرد");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"خطا در تغییر رمز عبور: {ex.Message}");
-        //    }
-        //}
-
-
-
-
-
-
-
-
-
-
-
-
+        }
 
         //[HttpPost("request-otp")]
         //public async Task<IActionResult> RequestOtp([FromBody] RequestOtpDTO request)
@@ -223,6 +231,11 @@ namespace Store_CAR.Controllers
 
         //    return Ok("OTP ارسال شد");
         //}
+
+
+
+
+
 
         //[HttpPost("verify-otp")]
         //public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDTO verifyRequest)
@@ -280,6 +293,7 @@ namespace Store_CAR.Controllers
         //    return NoContent();
 
         //}
+
 
         //    [HttpGet("{id}/purchase-history")]
         //    public async Task<ActionResult<IEnumerable<PurchaseHistoryDto>>> GetPurchaseHistory(int id)

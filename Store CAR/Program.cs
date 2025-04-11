@@ -91,13 +91,23 @@ builder.Services.AddScoped<ISaleNotificationService, SaleNotificationService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IRequestHandler<UserRegisterCommand<Buyer>, Guid>, UserRegisterCommandHandler<Buyer>>();
 builder.Services.AddScoped<IRequestHandler<UserRegisterCommand<Seller>, Guid>, UserRegisterCommandHandler<Seller>>();
-// اگه مودر یا هر نوع دیگه هم داری:
 builder.Services.AddScoped<IRequestHandler<UserRegisterCommand<Moder>, Guid>, UserRegisterCommandHandler<Moder>>();
 
 builder.Services.AddScoped<IRequestHandler<UserLoginCommand<Buyer>, string>, UserLoginCommandHandler<Buyer>>();
 builder.Services.AddScoped<IRequestHandler<UserLoginCommand<Seller>, string>, UserLoginCommandHandler<Seller>>();
-// اگه مودر یا هر نوع دیگه هم داری:
 builder.Services.AddScoped<IRequestHandler<UserLoginCommand<Moder>, string>, UserLoginCommandHandler<Moder>>();
+
+//builder.Services.AddTransient(typeof(IRequestHandler<>), typeof(RequestPasswordResetCommandHandler<>));
+//builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Buyer>, string>, RequestPasswordResetCommandHandler<Buyer>>();
+//builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Seller>, string>, RequestPasswordResetCommandHandler<Seller>>();
+//builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Moder>, string>, RequestPasswordResetCommandHandler<Moder>>();
+
+builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Buyer>, string>, RequestPasswordResetCommandHandler<Buyer>>();
+builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Seller>, string>, RequestPasswordResetCommandHandler<Seller>>();
+builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Moder>, string>, RequestPasswordResetCommandHandler<Moder>>();
+
+
+
 
 
 var app = builder.Build();
