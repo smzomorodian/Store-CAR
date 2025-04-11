@@ -102,5 +102,83 @@ namespace Application.Services
             return result;
         }
 
+        // دریافت گزارش فروش
+        public async Task<IEnumerable<SalesReportDto>> GetSalesReportAsync(DateTime startDate, DateTime endDate)
+        {
+            var salesReport = await _context.PurchaseHistories
+                .Where(p => p.PurchaseDate >= startDate && p.PurchaseDate <= endDate)
+                .GroupBy(p => p.PurchaseDate.Date)
+                .Select(g => new SalesReportDto
+                {
+                    Date = g.Key,
+                    TotalSales = g.Sum(s => s.PurchaseAmount),
+                    NumberOfSales = g.Count()
+                })
+                .ToListAsync();
+
+            return salesReport;
+        }
+
+        ///محاسبه و گزارش سود و ضرر 
+        public async Task<ProfitLossReportDto> GetProfitLossReportAsync(DateTime startDate, DateTime endDate)
+        {
+            // محاسبه درآمدها (فروش‌ها)
+            var sales = await _context.Sales
+                .Where(s => s.SaleDate >= startDate && s.SaleDate <= endDate)
+                .SumAsync(s => s.Amount);
+
+            // محاسبه هزینه‌ها
+            var expenses = await _context.Expenses
+                .Where(e => e.Date >= startDate && e.Date <= endDate)
+                .SumAsync(e => e.Amount);
+
+            // محاسبه سود ناخالص و سود خالص
+            var grossProfit = sales - expenses;
+
+            // هزینه‌های عملیاتی
+            var operatingExpenses = await _context.OperatingExpenses
+                .Where(o => o.Date >= startDate && o.Date <= endDate)
+                .SumAsync(o => o.Amount);
+
+            var netProfit = grossProfit - operatingExpenses;
+
+            // ساخت گزارش و ارسال پاسخ
+            var report = new ProfitLossReportDto
+            {
+                TotalSales = sales,
+                TotalExpenses = expenses,
+                GrossProfit = grossProfit,
+                OperatingExpenses = operatingExpenses,
+                NetProfit = netProfit
+            };
+
+            return report;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
+
+
 }
+

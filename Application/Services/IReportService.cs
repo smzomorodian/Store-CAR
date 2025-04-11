@@ -13,6 +13,10 @@ namespace Application.Services
         Task<List<LoyalCustomerDto>> GetLoyalCustomersAsync();
         Task<List<TopCustomerByAmountDto>> GetTopCustomersByAmountAsync();
         Task<List<NewCustomerDto>> GetNewCustomersAsync(int days = 30);
+        Task<IEnumerable<SalesReportDto>> GetSalesReportAsync(DateTime startDate, DateTime endDate);
+        Task<ProfitLossReportDto> GetProfitLossReportAsync(DateTime startDate, DateTime endDate);
+
+
 
     }
 }
