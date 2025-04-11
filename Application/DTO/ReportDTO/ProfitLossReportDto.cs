@@ -1,4 +1,4 @@
-﻿namespace Carproject.DTO
+﻿namespace Application.DTO.ReportDTO
 {
     public class ProfitLossReportDto
     {

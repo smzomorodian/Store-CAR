@@ -1,6 +1,6 @@
-﻿using Application.Services;
+﻿using Application.DTO.ReportDTO;
+using Application.Services;
 using AutoMapper;
-using Carproject.DTO;
 using Infrustructure.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -103,8 +103,29 @@ namespace Carproject.Controllers
             return Ok(result);
         }
 
+        //مشتریان وفادار (پرتکرارترین خریداران).
+        [HttpGet("loyal-customers")]
+        public async Task<IActionResult> GetLoyalCustomers()
+        {
+            var result = await _reportService.GetLoyalCustomersAsync();
+            return Ok(result);
+        }
 
+        // مشتریان با بیشترین مبلغ کل خرید
+        [HttpGet("top-customers-by-amount")]
+        public async Task<IActionResult> GetTopCustomersByAmount()
+        {
+            var result = await _reportService.GetTopCustomersByAmountAsync();
+            return Ok(result);
+        }
 
+        //  مشتریان جدید تو یکماه اخیر
+        [HttpGet("new-customers")]
+        public async Task<IActionResult> GetNewCustomers([FromQuery] int days = 30)
+        {
+            var result = await _reportService.GetNewCustomersAsync(days);
+            return Ok(result);
+        }
 
 
     }
