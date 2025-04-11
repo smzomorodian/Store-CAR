@@ -9,7 +9,7 @@ using Usermodel = Domain.Model.User;
 
 namespace Application.Command.User.CommandHandler
 {
-    public class RequestPasswordResetCommandHandler<T> : IRequestHandler<RequestPasswordResetCommand<T>, string> where T : Usermodel, new()
+    public class RequestPasswordResetCommandHandler<T> : IRequestHandler<RequestPasswordResetCommand<T>, string> where T : Usermodel
     {
         private readonly IRepository<T> _genericRepository;
         private readonly IUserInfoRepository<T> _userInfoRepository;

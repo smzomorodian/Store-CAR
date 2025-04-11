@@ -8,7 +8,7 @@ using Usermodel = Domain.Model.User;
 
 namespace Application.Command.User.CommandHandler
 {
-    public class ChangePasswordcommandHandler<T> : IRequestHandler<ChangePasswordcommand, string> where T : Usermodel, new()
+    public class ChangePasswordcommandHandler<T> : IRequestHandler<ChangePasswordcommand<T>, string> where T : Usermodel, new()
     {
         private readonly IRepository<T> _genericRepository;
         private readonly IUserInfoRepository<T> _userInfoRepository;
@@ -19,7 +19,7 @@ namespace Application.Command.User.CommandHandler
             _userInfoRepository = userInfoRepository;
         }
 
-        public async Task<string> Handle(ChangePasswordcommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(ChangePasswordcommand<T> request, CancellationToken cancellationToken)
         {
             if (request == null || string.IsNullOrEmpty(request.NationalCode) ||
                 string.IsNullOrEmpty(request.Otp) || string.IsNullOrEmpty(request.NewPassword))
