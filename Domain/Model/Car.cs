@@ -15,6 +15,7 @@ namespace Domain.Model
         // کانستراکتور
         public Car(string brand, string model, int year, string color, decimal price, string vin, CarStatus status, int categoryId, string name)
         {
+            Id = Guid.NewGuid();
             Brand = brand;
             Model = model;
             Year = year;
@@ -34,7 +35,7 @@ namespace Domain.Model
         }
 
         [Key]
-        public int Id { get; private set; }
+        public Guid Id { get; private set; }
 
         public string Name { get; private set; }
         public string Brand { get; private set; }

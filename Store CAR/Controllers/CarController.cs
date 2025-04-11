@@ -69,7 +69,7 @@ namespace Carproject.Controllers
 
         // دریافت خودرو بر اساس ID
         [HttpGet("{id}")]
-        public async Task<ActionResult<CarDto>> GetCar(int id)
+        public async Task<ActionResult<CarDto>> GetCar(Guid id)
         {
             var car = await _context.Cars
                                     .Include(c => c.Category)
