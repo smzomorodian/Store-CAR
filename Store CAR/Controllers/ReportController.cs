@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.Services;
+using AutoMapper;
 using Carproject.DTO;
 using Infrustructure.Context;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,13 @@ namespace Carproject.Controllers
     {
         private readonly CARdbcontext  _context;
         private readonly IMapper _mapper;
+        private readonly IReportService _reportService;
 
-        public ReportController(CARdbcontext context, IMapper mapper)
+        public ReportController(CARdbcontext context, IMapper mapper, IReportService reportService)
         {
             _context = context;
             _mapper = mapper;
+            _reportService = reportService;
         }
 
         [HttpGet("sales-report")]
@@ -92,7 +95,13 @@ namespace Carproject.Controllers
             return Ok(totalSales);
         }
 
-
+        // گزارش محبوبترین مدل خودرو
+        [HttpGet("popular-car-models")]
+        public async Task<IActionResult> GetPopularCarModels()
+        {
+            var result = await _reportService.GetPopularCarModelsAsync();
+            return Ok(result);
+        }
 
 
 

@@ -252,6 +252,8 @@ namespace Infrustructure.Migrations
 
                     b.HasIndex("BuyerId");
 
+                    b.HasIndex("CarId");
+
                     b.ToTable("Sales");
                 });
 
@@ -449,7 +451,15 @@ namespace Infrustructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Model.Car", "Car")
+                        .WithMany()
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Buyer");
+
+                    b.Navigation("Car");
                 });
 
             modelBuilder.Entity("Domain.Model.Car", b =>

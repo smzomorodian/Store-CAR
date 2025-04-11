@@ -1,4 +1,6 @@
-﻿namespace Carproject.Model
+﻿using Domain.Model;
+
+namespace Carproject.Model
 {
     public class Sale
     {
@@ -17,6 +19,7 @@
         public Guid BuyerId { get; set; }       // شناسه مشتری
         public Guid CarId { get; set; }       // شناسه مشتری
         public Buyer Buyer { get; set; }       // شناسه مشتری
+        public Car Car { get; set; }  
 
         public Sale()
         {

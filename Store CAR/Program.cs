@@ -85,6 +85,8 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 //اضافه کردن سرویس SaleNotificationService
 builder.Services.AddScoped<ISaleNotificationService, SaleNotificationService>();
 
+// سرویس گزارش محبوب ترین مدل خودرو
+builder.Services.AddScoped<IReportService, ReportService>();
 
 
 // AutoMapper
