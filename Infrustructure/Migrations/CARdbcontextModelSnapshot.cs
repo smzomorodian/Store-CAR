@@ -22,45 +22,7 @@ namespace Infrustructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Carproject.Model.Customer", b =>
-                {
-                    b.Property<int>("CustomerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LoyaltyStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Points")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("CustomerId");
-
-                    b.ToTable("Customer");
-                });
-
-            modelBuilder.Entity("Carproject.Model.CustomerCategory", b =>
+            modelBuilder.Entity("Carproject.Model.BuyerCategory", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -68,13 +30,10 @@ namespace Infrustructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<Guid?>("BuyerId")
+                    b.Property<Guid>("BuyerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.HasKey("id");
@@ -83,9 +42,7 @@ namespace Infrustructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("CustomerCategory");
+                    b.ToTable("BuyerCategory");
                 });
 
             modelBuilder.Entity("Carproject.Model.Expense", b =>
@@ -208,9 +165,6 @@ namespace Infrustructure.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("CustomerId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -224,8 +178,6 @@ namespace Infrustructure.Migrations
                     b.HasKey("PurchaseHistoryId");
 
                     b.HasIndex("BuyerId");
-
-                    b.HasIndex("CustomerId1");
 
                     b.ToTable("PurchaseHistories");
                 });
@@ -393,11 +345,13 @@ namespace Infrustructure.Migrations
                     b.ToTable("sellers", (string)null);
                 });
 
-            modelBuilder.Entity("Carproject.Model.CustomerCategory", b =>
+            modelBuilder.Entity("Carproject.Model.BuyerCategory", b =>
                 {
-                    b.HasOne("Buyer", null)
+                    b.HasOne("Buyer", "Buyer")
                         .WithMany("InterestedCategories")
-                        .HasForeignKey("BuyerId");
+                        .HasForeignKey("BuyerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Model.CarCategory", "Category")
                         .WithMany()
@@ -405,15 +359,9 @@ namespace Infrustructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Carproject.Model.Customer", "Customer")
-                        .WithMany("InterestedCategories")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Buyer");
 
                     b.Navigation("Category");
-
-                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Carproject.Model.FileBase", b =>
@@ -437,10 +385,6 @@ namespace Infrustructure.Migrations
                     b.HasOne("Buyer", null)
                         .WithMany("PurchaseHistories")
                         .HasForeignKey("BuyerId");
-
-                    b.HasOne("Carproject.Model.Customer", null)
-                        .WithMany("PurchaseHistories")
-                        .HasForeignKey("CustomerId1");
                 });
 
             modelBuilder.Entity("Carproject.Model.Sale", b =>
@@ -498,13 +442,6 @@ namespace Infrustructure.Migrations
                         .HasForeignKey("Domain.Model.Seller", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Carproject.Model.Customer", b =>
-                {
-                    b.Navigation("InterestedCategories");
-
-                    b.Navigation("PurchaseHistories");
                 });
 
             modelBuilder.Entity("Domain.Model.Car", b =>

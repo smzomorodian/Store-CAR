@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.DTO
+namespace Application.DTO.CarDTO
 {
     public class CarCategoryDto
     {
