@@ -1,5 +1,6 @@
 ﻿using Application.Command.User.Command;
 using Application.DTO;
+using AutoMapper;
 using Azure.Core;
 using Carproject.DTO;
 using Carproject.Model;
@@ -30,7 +31,8 @@ namespace Store_CAR.Controllers
         //private readonly IRepository<Buyer> _genericRepository;
         private string secretKey;
         private readonly IMediator _mediator;
-        public UserController(IMediator mediator, IConfiguration configuration, IUserInfoRepository<Buyer> userInfoRepository, IRepository<Buyer> genericRepository)
+        private readonly IMapper _mapper;
+        public UserController(IMediator mediator, IMapper mapper, IConfiguration configuration, IUserInfoRepository<Buyer> userInfoRepository, IRepository<Buyer> genericRepository)
         {
             // _cARdbcontext = cARdbcontext;
             //_repositoryBuyer = repositoryBuyer;
@@ -38,6 +40,7 @@ namespace Store_CAR.Controllers
             //_genericRepository = genericRepository;
             secretKey = configuration.GetValue<string>("ApiSettings:Secret");
             _mediator = mediator;
+            _mapper = mapper;
 
         }
 
@@ -168,7 +171,6 @@ namespace Store_CAR.Controllers
             return Ok("کد موقت ارسال شد");
         }
 
-
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword(string userType , [FromBody] ChangepasswordDTo request)
         {
@@ -265,54 +267,65 @@ namespace Store_CAR.Controllers
             return BadRequest("نوع کاربر نامعتبر است");
         }
 
-
         [HttpPut("EditInformation")]
-        public async Task<IActionResult> editinformation(string nationalcode, [FromBody] RegisterbuyerDTO registerbuyerDTO)
+        public async Task<IActionResult> editinformation(string nationalcode, string UserType, [FromBody] RegisterbuyerDTO registerbuyerDTO)
         {
-            var user = await _userInfoRepository.getnationalcode(nationalcode);
-            if (user == null)
+            if(UserType.ToLower() == "buyer")
             {
-                return BadRequest("User Not Found");
+                var command = new EditInformationCommand<Buyer>()
+                {
+                    Name = registerbuyerDTO.Name,
+                    Age = registerbuyerDTO.Age,
+                    National_Code = registerbuyerDTO.National_Code,
+                    Password = BCrypt.Net.BCrypt.HashPassword(registerbuyerDTO.Password),
+                    Phonenmber = registerbuyerDTO.Phonenmber,
+                    Email = registerbuyerDTO.Email,
+                    Role = registerbuyerDTO.Role
+                };
+                var result = await _mediator.Send(command);
+                return Ok(result);
             }
-            user.Name = registerbuyerDTO.Name;
-            user.phonenumber = registerbuyerDTO.Phonenmber;
-            user.nationalcode = registerbuyerDTO.National_Code;
-            user.Age = registerbuyerDTO.Age;
-            user.password = registerbuyerDTO.Password;
-
-            await _genericRepository.SavechangeAsync();
-            return NoContent();
+            if (UserType.ToLower() == "seller")
+            {
+                var command = new EditInformationCommand<Seller>()
+                {
+                    Name = registerbuyerDTO.Name,
+                    Age = registerbuyerDTO.Age,
+                    National_Code = registerbuyerDTO.National_Code,
+                    Password = BCrypt.Net.BCrypt.HashPassword(registerbuyerDTO.Password),
+                    Phonenmber = registerbuyerDTO.Phonenmber,
+                    Email = registerbuyerDTO.Email,
+                    Role = registerbuyerDTO.Role
+                };
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            return BadRequest("نوع کاربر نامعتبر است");
         }
 
+        //[HttpGet("{id}/purchase-history")]
+        //public async Task<ActionResult<IEnumerable<PurchaseHistoryDto>>> GetPurchaseHistory(int id)
+        //{
+        //    var customer = await _context.Customers
+        //        .Include(c => c.PurchaseHistories)
+        //        .FirstOrDefaultAsync(c => c.CustomerId == id);
 
+        //    if (customer == null)
+        //        return NotFound("Customer not found.");
 
+        //    // تبدیل اطلاعات مشتری به CustomerDto
+        //    var customerDto = _mapper.Map<CustomerDto>(customer);
 
+        //    // دریافت تاریخچه خرید
+        //    var purchaseHistoryDtos = _mapper.Map<List<PurchaseHistoryDto>>(customer.PurchaseHistories);
 
-        //    [HttpGet("{id}/purchase-history")]
-        //    public async Task<ActionResult<IEnumerable<PurchaseHistoryDto>>> GetPurchaseHistory(int id)
+        //    // برگرداندن اطلاعات مشتری و تاریخچه خرید
+        //    return Ok(new
         //    {
-        //        var customer = await _context.Customers
-        //            .Include(c => c.PurchaseHistories)
-        //            .FirstOrDefaultAsync(c => c.CustomerId == id);
-
-        //        if (customer == null)
-        //            return NotFound("Customer not found.");
-
-        //        // تبدیل اطلاعات مشتری به CustomerDto
-        //        var customerDto = _mapper.Map<CustomerDto>(customer);
-
-        //        // دریافت تاریخچه خرید
-        //        var purchaseHistoryDtos = _mapper.Map<List<PurchaseHistoryDto>>(customer.PurchaseHistories);
-
-
-
-        //        // برگرداندن اطلاعات مشتری و تاریخچه خرید
-        //        return Ok(new
-        //        {
-        //            Customer = customerDto,
-        //            PurchaseHistory = purchaseHistoryDtos
-        //        });
-        //    }
+        //        Customer = customerDto,
+        //        PurchaseHistory = purchaseHistoryDtos
+        //    });
+        //}
 
 
 

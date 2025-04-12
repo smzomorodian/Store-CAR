@@ -129,6 +129,9 @@ builder.Services.AddScoped<IRequestHandler<VerifyOtpCommand<Seller>, string>, Ve
 builder.Services.AddScoped<IRequestHandler<ChangePasswordcommand<Buyer>, string>, ChangePasswordcommandHandler<Buyer>>();
 builder.Services.AddScoped<IRequestHandler<ChangePasswordcommand<Seller>, string>, ChangePasswordcommandHandler<Seller>>();
 
+builder.Services.AddScoped<IRequestHandler<EditInformationCommand<Buyer>, string>, EditInformationCommandHandler<Buyer>>();
+builder.Services.AddScoped<IRequestHandler<EditInformationCommand<Seller>, string>, EditInformationCommandHandler<Seller>>();
+
 
 
 
