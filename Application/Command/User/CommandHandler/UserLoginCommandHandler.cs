@@ -47,8 +47,7 @@ namespace Application.Command.User.CommandHandler
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer = "http://localhost:5260",
-                Audience = "http://localhost:5260",
+
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
