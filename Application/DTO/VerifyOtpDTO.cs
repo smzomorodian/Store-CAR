@@ -8,6 +8,7 @@ namespace Application.DTO
 {
     public class VerifyOtpDTO
     {
+        public string UserType { get; set; }
         public string PhoneNumber { get; set; }
         public string otp { get; set; }
     }

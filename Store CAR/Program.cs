@@ -89,6 +89,8 @@ builder.Services.AddScoped<ISaleNotificationService, SaleNotificationService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+//command and command handler
 builder.Services.AddScoped<IRequestHandler<UserRegisterCommand<Buyer>, Guid>, UserRegisterCommandHandler<Buyer>>();
 builder.Services.AddScoped<IRequestHandler<UserRegisterCommand<Seller>, Guid>, UserRegisterCommandHandler<Seller>>();
 builder.Services.AddScoped<IRequestHandler<UserRegisterCommand<Moder>, Guid>, UserRegisterCommandHandler<Moder>>();
@@ -97,14 +99,21 @@ builder.Services.AddScoped<IRequestHandler<UserLoginCommand<Buyer>, string>, Use
 builder.Services.AddScoped<IRequestHandler<UserLoginCommand<Seller>, string>, UserLoginCommandHandler<Seller>>();
 builder.Services.AddScoped<IRequestHandler<UserLoginCommand<Moder>, string>, UserLoginCommandHandler<Moder>>();
 
-//builder.Services.AddTransient(typeof(IRequestHandler<>), typeof(RequestPasswordResetCommandHandler<>));
-//builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Buyer>, string>, RequestPasswordResetCommandHandler<Buyer>>();
-//builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Seller>, string>, RequestPasswordResetCommandHandler<Seller>>();
-//builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Moder>, string>, RequestPasswordResetCommandHandler<Moder>>();
-
 builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Buyer>, string>, RequestPasswordResetCommandHandler<Buyer>>();
 builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Seller>, string>, RequestPasswordResetCommandHandler<Seller>>();
 builder.Services.AddScoped<IRequestHandler<RequestPasswordResetCommand<Moder>, string>, RequestPasswordResetCommandHandler<Moder>>();
+
+builder.Services.AddScoped<IRequestHandler<RequestOtpCommand<Buyer>, string>, RequestOtpCommandHandler<Buyer>>();
+builder.Services.AddScoped<IRequestHandler<RequestOtpCommand<Seller>, string>, RequestOtpCommandHandler<Seller>>();
+
+builder.Services.AddScoped<IRequestHandler<checkUserCommand<Buyer>, bool>, checkUsercommandHandler<Buyer>>();
+builder.Services.AddScoped<IRequestHandler<checkUserCommand<Seller>, bool>, checkUsercommandHandler<Seller>>();
+
+builder.Services.AddScoped<IRequestHandler<VerifyOtpCommand<Buyer>, string>, VerifyOtpCommandHandler<Buyer>>();
+builder.Services.AddScoped<IRequestHandler<VerifyOtpCommand<Seller>, string>, VerifyOtpCommandHandler<Seller>>();
+
+builder.Services.AddScoped<IRequestHandler<ChangePasswordcommand<Buyer>, string>, ChangePasswordcommandHandler<Buyer>>();
+builder.Services.AddScoped<IRequestHandler<ChangePasswordcommand<Seller>, string>, ChangePasswordcommandHandler<Seller>>();
 
 
 

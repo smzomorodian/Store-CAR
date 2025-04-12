@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace Application.Command.User.Command
 {
-    public class RequestOtpCommand<T> : IRequest<string> where T : class
+    public class checkUserCommand<T> : IRequest<bool> where T : class
     {
+        public string nationalcode { get; set; }
         public string UserType { get; set; }
-        public string Phonenumber { get; set; }
 
-        public RequestOtpCommand(string userType, string phonenumber)
+        public checkUserCommand(string nationalcode, string userType)
         {
+            this.nationalcode = nationalcode;
             UserType = userType;
-            Phonenumber = phonenumber;
         }
-        public RequestOtpCommand() { }
+        public checkUserCommand() { }
     }
 }

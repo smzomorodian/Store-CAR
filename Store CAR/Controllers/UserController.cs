@@ -211,88 +211,81 @@ namespace Store_CAR.Controllers
 
         }
 
-        //[HttpPost("request-otp")]
-        //public async Task<IActionResult> RequestOtp([FromBody] RequestOtpDTO request)
-        //{
-        //    var user = await _userInfoRepository.getphonenmber(request.Phonenumber);
+        [HttpPost("request-otp")]
+        public async Task<IActionResult> RequestOtp([FromBody] RequestOtpDTO request)
+        {
+            if (request.UserType.ToLower() == "buyer")
+            {
+                var command = new RequestOtpCommand<Buyer>(request.UserType, request.Phonenumber);
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            else if (request.UserType.ToLower() == "seller")
+            {
+                var command = new RequestOtpCommand<Seller>(request.UserType, request.Phonenumber);
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            return BadRequest("نوع کاربر نامعتبر است");
+        }
 
-        //    if (user == null)
-        //    {
-        //        return NotFound("کاربر یافت نشد");
-        //    }
-        //    // ایجاد OTP و ذخیره در دیتابیس
-        //    var otp = new Random().Next(100000, 999999).ToString();
-        //    user.Otp = otp;
-        //    user.OtpExpiry = DateTime.UtcNow.AddMinutes(5); // اعتبار ۵ دقیقه
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDTO verifyRequest)
+        {
+            if (verifyRequest.UserType.ToLower() == "buyer")
+            {
+                var command = new VerifyOtpCommand<Buyer>(verifyRequest.UserType, verifyRequest.PhoneNumber , verifyRequest.otp);
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            if (verifyRequest.UserType.ToLower() == "seller")
+            {
+                var command = new VerifyOtpCommand<Seller>(verifyRequest.UserType, verifyRequest.PhoneNumber, verifyRequest.otp);
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            return BadRequest("نوع کاربر نامعتبر است");
+        }
 
-        //    await _genericRepository.SavechangeAsync();
+        [HttpGet("checkUser")]
+        public async Task<IActionResult> checkbuyer(string nationalcode , string UserType)
+        {
+            if (UserType.ToLower() == "buyer")
+            {
+                var command = new checkUserCommand<Buyer>(nationalcode, UserType);
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            if (UserType.ToLower() == "seller")
+            {
+                var command = new checkUserCommand<Seller>(nationalcode, UserType);
+                var result = await _mediator.Send(command);
+                return Ok(result);
+            }
+            return BadRequest("نوع کاربر نامعتبر است");
+        }
 
-        //    // اینجا باید OTP را از طریق SMS یا ایمیل ارسال کنید (مثلا با Twilio یا SendGrid)
 
-        //    return Ok("OTP ارسال شد");
-        //}
+        [HttpPut("EditInformation")]
+        public async Task<IActionResult> editinformation(string nationalcode, [FromBody] RegisterbuyerDTO registerbuyerDTO)
+        {
+            var user = await _userInfoRepository.getnationalcode(nationalcode);
+            if (user == null)
+            {
+                return BadRequest("User Not Found");
+            }
+            user.Name = registerbuyerDTO.Name;
+            user.phonenumber = registerbuyerDTO.Phonenmber;
+            user.nationalcode = registerbuyerDTO.National_Code;
+            user.Age = registerbuyerDTO.Age;
+            user.password = registerbuyerDTO.Password;
+
+            await _genericRepository.SavechangeAsync();
+            return NoContent();
+        }
 
 
 
-
-
-
-        //[HttpPost("verify-otp")]
-        //public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDTO verifyRequest)
-        //{
-        //    var user = await _userInfoRepository.getphonenmber(verifyRequest.PhoneNumber);
-
-        //    if (user == null)
-        //        return NotFound("کاربر یافت نشد");
-
-        //    if (user.Otp == null || user.OtpExpiry < DateTime.UtcNow)
-        //        return BadRequest("OTP نامعتبر یا منقضی شده است");
-
-        //    if (user.Otp != verifyRequest.otp)
-        //        return BadRequest("OTP اشتباه است");
-
-        //    // پاک کردن OTP بعد از تأیید موفقیت‌آمیز
-        //    user.Otp = null;
-        //    user.OtpExpiry = null;
-        //    await _genericRepository.SavechangeAsync();
-
-        //    return Ok("ورود موفقیت‌آمیز بود");
-        //}
-
-        //[HttpGet("check buyer")]
-        //public async Task<IActionResult> checkbuyer(string nationalcode)
-        //{
-        //    if (string.IsNullOrWhiteSpace(nationalcode))
-        //        return BadRequest(new { message = "National code is required." });
-
-        //    var user = await _userInfoRepository.getnationalcode(nationalcode);
-        //    if (user == null)
-        //    {
-        //        return NotFound(new { exists = false });
-
-        //    }
-        //    return Ok(new { exists = true });
-        //}
-
-        //[HttpPut("edit information buyer")]
-        //[Authorize(Roles = "buyer")]
-        //public async Task<IActionResult> editinformation(string nationalcode, [FromBody] RegisterbuyerDTO registerbuyerDTO)
-        //{
-        //    var user = await _userInfoRepository.getnationalcode(nationalcode);
-        //    if (user == null)
-        //    {
-        //        return BadRequest("User Not Found");
-        //    }
-        //    user.Name = registerbuyerDTO.Name;
-        //    user.phonenumber = registerbuyerDTO.Phonenmber;
-        //    user.nationalcode = registerbuyerDTO.National_Code;
-        //    user.Age = registerbuyerDTO.Age;
-        //    user.password = registerbuyerDTO.Password;
-
-        //    await _genericRepository.SavechangeAsync();
-        //    return NoContent();
-
-        //}
 
 
         //    [HttpGet("{id}/purchase-history")]
