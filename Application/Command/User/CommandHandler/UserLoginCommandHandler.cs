@@ -1,4 +1,5 @@
 ﻿using Application.Command.User.Command;
+using Domain.Model;
 using FirebaseAdmin.Auth;
 using Infrustructure.Repository.IRepository;
 using MediatR;
@@ -46,6 +47,7 @@ namespace Application.Command.User.CommandHandler
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -58,7 +60,25 @@ namespace Application.Command.User.CommandHandler
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+
+            //var tokenHandler = new JwtSecurityTokenHandler();
+            //var key = Encoding.ASCII.GetBytes("THIS IS USED TO SIGN AND VERIFY JWT TOKENS, REPLACE IT WITH YOUR OWN SECRET");
+            //var tokenDescriptor = new SecurityTokenDescriptor
+            //{
+            //    Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, user.ToString()) }),
+            //    Expires = DateTime.UtcNow.AddHours(1),
+            //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256),
+            //    Issuer = "http://localhost:5260",
+            //    Audience = "http://localhost:5260"
+            //};
+            //var token = tokenHandler.CreateToken(tokenDescriptor);
+            //return tokenHandler.WriteToken(token);
+
+
+
+
         }
 
     }
-}
+
+   }

@@ -161,9 +161,12 @@ namespace Carproject.Controllers
 
 
             var notifications = await _context.Notifications
-                .Where(n => n.Id == customerId)  // تغییر از UserId به CustomerId
+                .Where(n => n.CustomerId == customerId)  // تغییر از UserId به CustomerId
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
+
+            if (notifications == null || notifications.Count == 0)
+                return Ok(new { message = "مشتری هیچ نوتیفیکیشنی ندارد." });
 
             return Ok(notifications);
         }
@@ -185,7 +188,7 @@ namespace Carproject.Controllers
 
         /// اطلاع رسانی خودرو جدید
         [HttpPost("notify-new-car/{carId}")]
-        public async Task<IActionResult> NotifyNewCar(int carId)
+        public async Task<IActionResult> NotifyNewCar(Guid carId)
         {
             // بررسی اینکه خودرو در سیستم ثبت شده باشد
             var car = await _context.Cars.FindAsync(carId);
@@ -249,7 +252,7 @@ namespace Carproject.Controllers
 
 
 
-        // 📌 API برای دریافت مشتری و بررسی `InterestedCategories`
+        // 📌 API برای دریافت مشتری و بررسی `InterestedCategories` مشتری علاقمند
         [HttpGet("{customerId}")]
         public async Task<IActionResult> GetCustomer(Guid customerId)
         {

@@ -4,7 +4,7 @@ namespace Carproject.Model
 {
     public class Customer
     {
-        public Customer(string firstName, string lastName, string email, string phoneNumber, DateTime dateOfBirth, List<CustomerCategory> interestedCategories)
+        public Customer(string firstName, string lastName, string email, string phoneNumber, DateTime dateOfBirth, List<BuyerCategory> interestedCategories)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -31,7 +31,7 @@ namespace Carproject.Model
 
             
         // 🔹 فیلد جدید برای ذخیره علاقه مشتری به دسته‌بندی خودرو با ارتباط چند به چند
-        public List<CustomerCategory> InterestedCategories { get; set; } = new();
+        public List<BuyerCategory> InterestedCategories { get; set; } = new();
         // مثال: "SUV" یا "Sedan"
     }
 }

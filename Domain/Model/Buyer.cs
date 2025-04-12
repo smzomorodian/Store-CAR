@@ -20,7 +20,7 @@ public class Buyer : User
 
 
     // 🔹 فیلد جدید برای ذخیره علاقه مشتری به دسته‌بندی خودرو با ارتباط چند به چند
-    public List<CustomerCategory> InterestedCategories { get; set; } = new();
+    public List<BuyerCategory> InterestedCategories { get; set; } = new();
     // مثال: "SUV" یا "Sedan"
 
     //مدل سیل

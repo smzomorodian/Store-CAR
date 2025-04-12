@@ -1,7 +1,6 @@
-﻿
-using static Domain.Model.Car;
+﻿using static Domain.Model.Car;
 
-namespace Application.DTO
+namespace Application.DTO.CarDTO
 {
     public class CarDto
     {
@@ -14,7 +13,7 @@ namespace Application.DTO
         public string ImagePath { get; set; }
 
         // وضعیت خودرو
-        public CarStatus Status { get; set; }
+        public string Status { get; set; }
 
         // دسته‌بندی
         public int CategoryId { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.DTO;
 using Carproject.Model;
 using Domain.Model;
 using Infrustructure.Context;
@@ -52,6 +53,12 @@ namespace Application.Services
 
             await _emailService.SendEmailAsync(emailRequest);
         }
+
+
+
+
     }
+
+
 
 }

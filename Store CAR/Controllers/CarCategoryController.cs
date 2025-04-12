@@ -1,5 +1,5 @@
-﻿
-using Application.DTO;
+﻿using Application.DTO.CarDTO;
+using Carproject.Model;
 using Domain.Model;
 using Infrustructure.Context;
 using Infrustructure.Repository.IRepository;
@@ -49,6 +49,7 @@ namespace Carproject.Controllers
         // ✅ افزودن دسته‌بندی جدید
         [HttpPost]
         [Authorize(Roles = "moder, seller")] // اضافه کردن محدودیت دسترسی
+       
         public async Task<ActionResult<CarCategory>> AddCategory([FromBody] CarCategoryDto categoryDto)
         {
             if (!ModelState.IsValid)
@@ -85,5 +86,59 @@ namespace Carproject.Controllers
 
             return NoContent();
         }
+
+
+
+        //اضافه کردن دسته بندی ماشین مورد علاقه مشتری
+        [HttpPost("{buyerId}/interested-categories")]
+        public async Task<IActionResult> AddInterestedCategories(Guid buyerId, [FromForm] InterestedCategoriesDto dto)
+        {
+            var buyer = await _context.buyers
+                .Include(c => c.InterestedCategories)
+                .FirstOrDefaultAsync(c => c.Id == buyerId);
+
+            if (buyer == null)
+                return NotFound(new { message = "Customer not found" });
+
+            foreach (var categoryId in dto.CategoryId)
+            {
+                if (!buyer.InterestedCategories.Any(ic => ic.CategoryId == categoryId))
+                {
+                    buyer.InterestedCategories.Add(new BuyerCategory
+                    {
+                        BuyerId = buyerId,
+                        CategoryId = categoryId
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Categories added successfully." });
+        }
+
+
+        // حذف دسته‌بندی‌های ماشین مورد علاقه مشتری
+        [HttpDelete("{buyerId}/interested-categories")]
+        public async Task<IActionResult> RemoveInterestedCategories(Guid buyerId, [FromBody] InterestedCategoriesDto dto)
+        {
+            var buyer = await _context.buyers
+                .Include(c => c.InterestedCategories)
+                .FirstOrDefaultAsync(c => c.Id == buyerId);
+
+            if (buyer == null)
+                return NotFound(new { message = "Customer not found" });
+
+            // حذف دسته‌بندی‌هایی که در لیست ورودی هستن
+            buyer.InterestedCategories = buyer.InterestedCategories
+                .Where(ic => !dto.CategoryId.Contains(ic.CategoryId))
+                .ToList();
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Selected categories removed successfully." });
+        }
+
+
     }
 }

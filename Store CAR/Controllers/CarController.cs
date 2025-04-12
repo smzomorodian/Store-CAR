@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using Carproject.Model;
-using Application.DTO;
 using Domain.Model;
 using static Domain.Model.Car;
 using Infrustructure.Context;
 using Application.Command.Car;
+using Application.DTO.CarDTO;
 
 namespace Carproject.Controllers
 {
@@ -41,6 +41,9 @@ namespace Carproject.Controllers
             // اضافه کردن خودرو به پایگاه داده
             _context.Cars.Add(car);
             await _context.SaveChangesAsync();
+
+            // لود کردن دسته‌بندی
+            await _context.Entry(car).Reference(c => c.Category).LoadAsync();
 
             // نگاشت خودرو به CarDto برای پاسخ‌دهی
             var carDto = _mapper.Map<CarDto>(car);

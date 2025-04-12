@@ -25,6 +25,8 @@ builder.Services.AddSwaggerGen(options =>
     {
         Name = "Authorization",
         In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
         Scheme = "Bearer"
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement()
@@ -46,6 +48,10 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+
+
+
+
 builder.Services.AddDbContext<CARdbcontext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CAR"))
 );
@@ -58,6 +64,8 @@ builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    //
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(x =>
 {
@@ -66,9 +74,13 @@ builder.Services.AddAuthentication(x =>
     x.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
         ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateAudience = false,
+        
+        ValidIssuer = "http://localhost:5260",
+        ValidAudience = "http://localhost:5260",
+
     };
 });
 
@@ -85,6 +97,8 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 //اضافه کردن سرویس SaleNotificationService
 builder.Services.AddScoped<ISaleNotificationService, SaleNotificationService>();
 
+// سرویس گزارش محبوب ترین مدل خودرو
+builder.Services.AddScoped<IReportService, ReportService>();
 
 
 // AutoMapper
