@@ -48,7 +48,7 @@ namespace Carproject.Controllers
 
         // ✅ افزودن دسته‌بندی جدید
         [HttpPost]
-        [Authorize(Roles = "moder, seller")] // اضافه کردن محدودیت دسترسی
+        //[Authorize(Roles = "moder, seller")] // اضافه کردن محدودیت دسترسی
        
         public async Task<ActionResult<CarCategory>> AddCategory([FromBody] CarCategoryDto categoryDto)
         {

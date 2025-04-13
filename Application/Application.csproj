@@ -29,4 +29,9 @@
 		<ProjectReference Include="..\Infrustructure\Infrustructure.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Command\SaleCar\Command\" />
+	  <Folder Include="Command\SaleCar\CommandHandler\" />
+	</ItemGroup>
+
 </Project>

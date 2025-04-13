@@ -25,27 +25,17 @@ namespace Store_CAR.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        //private readonly CARdbcontext _cARdbcontext;
-        //private readonly IRepositoryBuyer _repositoryBuyer;
-        //private readonly IUserInfoRepository<Buyer> _userInfoRepository;
-        //private readonly IRepository<Buyer> _genericRepository;
         private string secretKey;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         public UserController(IMediator mediator, IMapper mapper, IConfiguration configuration, IUserInfoRepository<Buyer> userInfoRepository, IRepository<Buyer> genericRepository)
         {
-            // _cARdbcontext = cARdbcontext;
-            //_repositoryBuyer = repositoryBuyer;
-            //_userInfoRepository = userInfoRepository;
-            //_genericRepository = genericRepository;
             secretKey = configuration.GetValue<string>("ApiSettings:Secret");
             _mediator = mediator;
             _mapper = mapper;
-
         }
 
         [HttpPost("register/{userType}")]
-        //[Authorize(Roles = "buyer, moder, seller")]
         public async Task<IActionResult> Register(string userType, [FromBody]RegisterbuyerDTO registerbuyerDTO)
         {
             Type userClassType = null;
@@ -106,7 +96,6 @@ namespace Store_CAR.Controllers
         }
 
         [HttpPost("Loginonestage/{userType}")]
-      //[Authorize(Roles = "buyer, moder, seller")]
         public async Task<IActionResult> Login(string userType,[FromBody] LogingUserDTO logingUserDTO)
         {
             string Token;
@@ -213,6 +202,7 @@ namespace Store_CAR.Controllers
 
         }
 
+        // Two-step authentication
         [HttpPost("request-otp")]
         public async Task<IActionResult> RequestOtp([FromBody] RequestOtpDTO request)
         {
@@ -230,7 +220,6 @@ namespace Store_CAR.Controllers
             }
             return BadRequest("نوع کاربر نامعتبر است");
         }
-
         [HttpPost("verify-otp")]
         public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDTO verifyRequest)
         {
@@ -248,6 +237,7 @@ namespace Store_CAR.Controllers
             }
             return BadRequest("نوع کاربر نامعتبر است");
         }
+        //---------------------------------------------
 
         [HttpGet("checkUser")]
         public async Task<IActionResult> checkbuyer(string nationalcode , string UserType)
@@ -303,6 +293,7 @@ namespace Store_CAR.Controllers
             return BadRequest("نوع کاربر نامعتبر است");
         }
 
+
         //[HttpGet("{id}/purchase-history")]
         //public async Task<ActionResult<IEnumerable<PurchaseHistoryDto>>> GetPurchaseHistory(int id)
         //{
@@ -329,49 +320,49 @@ namespace Store_CAR.Controllers
 
 
 
-        //    [HttpPost("add-purchase-history")]
-        //    public async Task<ActionResult<PurchaseHistoryDto>> AddPurchaseHistory([FromBody] PurchaseHistoryDto purchaseHistoryDto)
-        //    {
-        //        // بررسی اینکه مشتری وجود دارد یا خیر
-        //        var customer = await _context.Customers.FindAsync(purchaseHistoryDto.CustomerId);
-        //        if (customer == null)
-        //            return NotFound("Customer not found.");
+        //[HttpPost("add-purchase-history")]
+        //public async Task<ActionResult<PurchaseHistoryDto>> AddPurchaseHistory([FromBody] PurchaseHistoryDto purchaseHistoryDto)
+        //{
+        //    // بررسی اینکه مشتری وجود دارد یا خیر
+        //    var customer = await _context.Customers.FindAsync(purchaseHistoryDto.CustomerId);
+        //    if (customer == null)
+        //        return NotFound("Customer not found.");
 
-        //        var purchaseHistory = _mapper.Map<PurchaseHistory>(purchaseHistoryDto);
-
-
-        //        // افزودن سابقه خرید به پایگاه داده
-        //        _genericRepository.AddAsync(purchaseHistory);
-        //        await _genericRepository.SavechangeAsync();
-
-        //        // تبدیل PurchaseHistory به PurchaseHistoryDto و بازگشت داده‌ها
-        //        var result = _mapper.Map<PurchaseHistoryDto>(purchaseHistory);
-
-        //        return CreatedAtAction(nameof(GetPurchaseHistory), new { id = purchaseHistory.CustomerId }, result);
-        //    }
-
-        //    private LoyaltyStatus GetLoyaltyStatus(decimal points)
-        //    {
-        //        if (points < 100) return LoyaltyStatus.Bronze;
-        //        if (points < 500) return LoyaltyStatus.Silver;
-        //        if (points < 1000) return LoyaltyStatus.Gold;
-        //        return LoyaltyStatus.Platinum;
-        //    }
+        //    var purchaseHistory = _mapper.Map<PurchaseHistory>(purchaseHistoryDto);
 
 
-        //    [HttpPost("add-points")]
-        //    public async Task<IActionResult> AddPointsToCustomer(int customerId, decimal purchaseAmount)
-        //    {
-        //        var customer = await _context.Customers.FindAsync(customerId);
-        //        if (customer == null) return NotFound("Customer not found.");
+        //    // افزودن سابقه خرید به پایگاه داده
+        //    _genericRepository.AddAsync(purchaseHistory);
+        //    await _genericRepository.SavechangeAsync();
 
-        //        customer.Points += purchaseAmount / 1000;
-        //        customer.LoyaltyStatus = GetLoyaltyStatus(customer.Points);
+        //    // تبدیل PurchaseHistory به PurchaseHistoryDto و بازگشت داده‌ها
+        //    var result = _mapper.Map<PurchaseHistoryDto>(purchaseHistory);
 
-        //        await _context.SaveChangesAsync();
-        //        return Ok(new { customer.Points, customer.LoyaltyStatus });
-        //    }
+        //    return CreatedAtAction(nameof(GetPurchaseHistory), new { id = purchaseHistory.CustomerId }, result);
+        //}
+
+        //private LoyaltyStatus GetLoyaltyStatus(decimal points)
+        //{
+        //    if (points < 100) return LoyaltyStatus.Bronze;
+        //    if (points < 500) return LoyaltyStatus.Silver;
+        //    if (points < 1000) return LoyaltyStatus.Gold;
+        //    return LoyaltyStatus.Platinum;
+        //}
+
+
+        //[HttpPost("add-points")]
+        //public async Task<IActionResult> AddPointsToCustomer(int customerId, decimal purchaseAmount)
+        //{
+        //    var customer = await _context.Customers.FindAsync(customerId);
+        //    if (customer == null) return NotFound("Customer not found.");
+
+        //    customer.Points += purchaseAmount / 1000;
+        //    customer.LoyaltyStatus = GetLoyaltyStatus(customer.Points);
+
+        //    await _context.SaveChangesAsync();
+        //    return Ok(new { customer.Points, customer.LoyaltyStatus });
         //}
     }
 }
+
 
