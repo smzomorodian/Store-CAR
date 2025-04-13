@@ -106,7 +106,7 @@ namespace Carproject.Controllers
             [FromQuery] decimal? minPrice,
             [FromQuery] decimal? maxPrice,
             [FromQuery] int? categoryId,
-            [FromQuery] CarStatus? status)
+            [FromQuery] CarStatus? status) 
         {
             if (minPrice > maxPrice)
                 return BadRequest(new { message = "حداقل قیمت نمی‌تواند بیشتر از حداکثر قیمت باشد." });
