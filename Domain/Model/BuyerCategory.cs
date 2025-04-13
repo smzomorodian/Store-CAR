@@ -10,7 +10,7 @@ namespace Carproject.Model
             Buyer = Buyer;
             CategoryId = categoryId;
             Category = category;
-        }
+        } 
         public BuyerCategory()
         {
             

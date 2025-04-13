@@ -46,7 +46,7 @@ namespace Domain.Model
         public string VIN { get; private set; } // شماره شاسی
         public CarStatus Status { get; private set; }
         public int CategoryId { get; private set; }
-
+         
         [ForeignKey("CategoryId")]
         public CarCategory Category { get; private set; }
 

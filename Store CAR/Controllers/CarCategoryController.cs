@@ -110,7 +110,7 @@ namespace Carproject.Controllers
                         CategoryId = categoryId
                     });
                 }
-            }
+            } 
 
             await _context.SaveChangesAsync();
 
