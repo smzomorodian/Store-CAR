@@ -4,6 +4,7 @@ using Domain.Model;
 using Infrustructure.Repository.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Store_CAR.Controllers
 {
@@ -11,17 +12,22 @@ namespace Store_CAR.Controllers
     [ApiController]
     public class CarSaleController : ControllerBase
     {
-        private readonly ICarRepository _carRepository;
-        private readonly ISaleRepository _saleRepository;
-        private readonly IRepository<Buyer> _genericrepository;
-        private readonly IUserInfoRepository<Buyer> _userInfoRepository;
+    private readonly ICarRepository _carRepository;
+    private readonly ISaleRepository _saleRepository;
+    private readonly IRepository<Buyer> _genericrepository;
+    private readonly IUserInfoRepository<Buyer> _userInfoRepository;
 
-        // کانستراکتور برای دریافت وابستگی‌ها
-        public CarSaleController(ICarRepository carRepository, ISaleRepository saleRepository)
-        {
-            _carRepository = carRepository;
-            _saleRepository = saleRepository;
-        }
+    public CarSaleController(
+        ICarRepository carRepository,
+        ISaleRepository saleRepository,
+        IRepository<Buyer> genericrepository,
+        IUserInfoRepository<Buyer> userInfoRepository)
+    {
+        _carRepository = carRepository;
+        _saleRepository = saleRepository;
+        _genericrepository = genericrepository;
+        _userInfoRepository = userInfoRepository;
+    }
 
         //// فیلتر کردن خودروها بر اساس پارامترهای ورودی
         [HttpGet("filter")]
@@ -93,7 +99,7 @@ namespace Store_CAR.Controllers
             }
         }
         // انتخاب خودرو برای خرید
-        [HttpPost("Buy Car")]
+        [HttpPost("BuyCar")]
         public async Task<IActionResult> BuyCar([FromBody] BuyCarDTO buyCarDto)
         {
             try
@@ -119,19 +125,18 @@ namespace Store_CAR.Controllers
 
                 // ایجاد یک رکورد جدید در جدول فروش
                 var sale = new Sale
-                (
-                    saleDate: DateTime.Now,
-                    amount: car.Price,
-                    buyerId: buyCarDto.BuyerId
-                )
                 {
+                    Id = Guid.NewGuid(), // بسیار مهم
                     CarId = buyCarDto.CarId,
-                    Buyer = buyer,
-                    Car = car
+                    BuyerId = buyCarDto.BuyerId,
+                    SaleDate = DateTime.Now,
+                    Amount = car.Price,
+                    stock = 1 // اگر نیاز هست، در غیر این صورت حذفش کن یا مقدار پیش‌فرض بده
                 };
 
                 // ثبت خرید در پایگاه داده
                 var createdSale = await _saleRepository.AddSaleAsync(sale);
+                await _genericrepository.SavechangeAsync();
 
                 // به‌روزرسانی وضعیت خودرو به "فروخته شده"
                 car.SetStatus(Car.CarStatus.Sold);
@@ -143,6 +148,17 @@ namespace Store_CAR.Controllers
             {
                 return StatusCode(500, $"خطا در ثبت خرید: {ex.Message}");
             }
+        }
+        [HttpPost("mark-as-pay")]
+        public async Task<IActionResult> MarkAsRead(Guid saleid)
+        {
+            var sale = await _saleRepository.GetBSaleByIdAsync(saleid);
+            if (sale == null) return NotFound();
+
+            sale.Ispay = true;
+            await _genericrepository.SavechangeAsync();
+
+            return Ok("سفارش شما تایید شد.");
         }
     }
 }

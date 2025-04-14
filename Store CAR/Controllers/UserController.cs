@@ -15,10 +15,10 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Store_CAR.Controllers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
 namespace Store_CAR.Controllers
 {
     [Route("api/[controller]")]
@@ -28,7 +28,8 @@ namespace Store_CAR.Controllers
         private string secretKey;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        public UserController(IMediator mediator, IMapper mapper, IConfiguration configuration, IUserInfoRepository<Buyer> userInfoRepository, IRepository<Buyer> genericRepository)
+
+        public UserController(IMediator mediator, IMapper mapper, IConfiguration configuration)
         {
             secretKey = configuration.GetValue<string>("ApiSettings:Secret");
             _mediator = mediator;
@@ -36,7 +37,7 @@ namespace Store_CAR.Controllers
         }
 
         [HttpPost("register/{userType}")]
-        public async Task<IActionResult> Register(string userType, [FromBody]RegisterbuyerDTO registerbuyerDTO)
+        public async Task<IActionResult> Register(string userType, [FromBody] RegisterbuyerDTO registerbuyerDTO)
         {
             Type userClassType = null;
             string userTypeClean = userType?.Trim().ToLower();
@@ -96,7 +97,7 @@ namespace Store_CAR.Controllers
         }
 
         [HttpPost("Loginonestage/{userType}")]
-        public async Task<IActionResult> Login(string userType,[FromBody] LogingUserDTO logingUserDTO)
+        public async Task<IActionResult> Login(string userType, [FromBody] LogingUserDTO logingUserDTO)
         {
             string Token;
             string userTypeclean = userType;
@@ -161,7 +162,7 @@ namespace Store_CAR.Controllers
         }
 
         [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword(string userType , [FromBody] ChangepasswordDTo request)
+        public async Task<IActionResult> ResetPassword(string userType, [FromBody] ChangepasswordDTo request)
         {
             string userTypeClean = userType.Trim().ToLower();
             string result;
@@ -225,7 +226,7 @@ namespace Store_CAR.Controllers
         {
             if (verifyRequest.UserType.ToLower() == "buyer")
             {
-                var command = new VerifyOtpCommand<Buyer>(verifyRequest.UserType, verifyRequest.PhoneNumber , verifyRequest.otp);
+                var command = new VerifyOtpCommand<Buyer>(verifyRequest.UserType, verifyRequest.PhoneNumber, verifyRequest.otp);
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
@@ -240,7 +241,7 @@ namespace Store_CAR.Controllers
         //---------------------------------------------
 
         [HttpGet("checkUser")]
-        public async Task<IActionResult> checkbuyer(string nationalcode , string UserType)
+        public async Task<IActionResult> checkbuyer(string nationalcode, string UserType)
         {
             if (UserType.ToLower() == "buyer")
             {
@@ -260,7 +261,7 @@ namespace Store_CAR.Controllers
         [HttpPut("EditInformation")]
         public async Task<IActionResult> editinformation(string nationalcode, string UserType, [FromBody] RegisterbuyerDTO registerbuyerDTO)
         {
-            if(UserType.ToLower() == "buyer")
+            if (UserType.ToLower() == "buyer")
             {
                 var command = new EditInformationCommand<Buyer>()
                 {

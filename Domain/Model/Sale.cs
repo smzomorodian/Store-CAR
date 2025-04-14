@@ -4,13 +4,7 @@ namespace Carproject.Model
 {
     public class Sale
     {
-        public Sale(DateTime saleDate, decimal amount, Guid buyerId)
-        {
-            Id = Guid.NewGuid();
-            SaleDate = saleDate;
-            Amount = amount;
-            BuyerId = buyerId;
-        }
+
 
 
         public Guid Id { get; set; }               // شناسه فروش
@@ -20,12 +14,22 @@ namespace Carproject.Model
         public Guid CarId { get; set; }        // شناسه خودرو
         public Buyer Buyer { get; set; }      // اطلاعات مشتری
         public Car Car { get; set; }         // اطلاعات خودرو
-        public int stock { get; set; }     // تعدا ماشین های موجود
+        public int? stock { get; set; }     // تعدادماشین های موجود
+        public bool Ispay { get; set; } = false; // تایید خرید
         public Sale()
         {
 
         }
 
+        public Sale(DateTime saleDate, decimal amount, Guid buyerId, Guid carId , bool ispay)
+        {
+            Id = Guid.NewGuid();
+            SaleDate = saleDate;
+            Amount = amount;
+            BuyerId = buyerId;
+            CarId = carId;
+            Ispay = ispay;
+        }
     }
 
 }

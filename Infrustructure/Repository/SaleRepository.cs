@@ -20,8 +20,13 @@ namespace Infrustructure.Repository
         public async Task<Sale> AddSaleAsync(Sale sale)
         {
             await _context.AddAsync(sale);
-            await _context.SaveChangesAsync();
             return (sale);
+        }
+
+        public async Task<Sale> GetBSaleByIdAsync(Guid selerId)
+        {
+            var salepay = await _context.Sales.FindAsync(selerId);
+            return (salepay);
         }
 
         public async Task<Buyer> GetBuyerByIdAsync(Guid buyerId)

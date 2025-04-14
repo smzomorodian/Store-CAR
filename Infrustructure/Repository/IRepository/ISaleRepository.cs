@@ -11,7 +11,7 @@ namespace Infrustructure.Repository.IRepository
     public interface ISaleRepository
     {
         Task<Sale> AddSaleAsync(Sale sale);
-        //Task<Buyer> GetBuyerByIdAsync(Guid buyerId);
         Task<Buyer> GetBuyerByIdAsync(Guid buyerId);
+        Task<Sale> GetBSaleByIdAsync(Guid selerId);
     }
 }

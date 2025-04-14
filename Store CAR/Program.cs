@@ -48,10 +48,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-
-
-
-
 builder.Services.AddDbContext<CARdbcontext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CAR"))
 );
@@ -107,6 +103,12 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //------------------------------------------------------------
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+builder.Services.AddScoped<IUserInfoRepository<Buyer>, UserInfoRepository<Buyer>>();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+
 
 //command and command handler
 builder.Services.AddScoped<IRequestHandler<UserRegisterCommand<Buyer>, Guid>, UserRegisterCommandHandler<Buyer>>();

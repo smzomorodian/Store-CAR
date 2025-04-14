@@ -197,10 +197,13 @@ namespace Infrustructure.Migrations
                     b.Property<Guid>("CarId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Ispay")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("SaleDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("stock")
+                    b.Property<int?>("stock")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

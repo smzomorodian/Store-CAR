@@ -54,11 +54,36 @@ namespace Application.Services
             await _emailService.SendEmailAsync(emailRequest);
         }
 
+        public async Task SendSabtsefarchNotificationAsync(Guid saleId)
+        {
+            var sale = await _context.Sales.FirstOrDefaultAsync(s => s.Id == saleId);
+            if (sale == null) throw new Exception("فروش یافت نشد.");
+
+            var buyer = await _context.buyers.FirstOrDefaultAsync(c => c.Id == sale.BuyerId);
+            if (buyer == null) throw new Exception("مشتری یافت نشد.");
+
+            // ایجاد نوتیفیکیشن
+            var notification = new Notification(
+                "فروش جدید",
+                $"یک خودرو به مبلغ {sale.Amount} با شناسه فروش {sale.Id} به سبد خرید شما اضافه شد.",
+                DateTime.Now,
+                sale.CarId,
+                buyer.Id
+            );
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
 
 
+            // ارسال ایمیل
+            var emailRequest = new Email
+            {
+                To = buyer.Email, // فرض: Email داخل مدل customer هست
+                Subject = "تأیید خرید",
+                Body = $"<html><body>با تشکر از سفارش شما. مبلغ خرید: {sale.Amount}</body></html>"
+            };
 
+            await _emailService.SendEmailAsync(emailRequest);
+        }
     }
-
-
-
 }

@@ -26,107 +26,6 @@ namespace Carproject.Controllers
             _saleNotificationService = saleNotificationService;
         }
 
-        //متد ارسال نوتیف با پرکردن فروش
-        //[HttpPost("add-sale")]
-        //public async Task<IActionResult> AddSale([FromBody] Sale sale)
-        //{
-        //    // بررسی صحت اطلاعات ورودی
-        //    if (sale == null || sale.Amount <= 0)
-        //    {
-        //        return BadRequest("اطلاعات فروش معتبر نیست.");
-        //    }
-
-        //    if (sale.CustomerId == null || sale.CustomerId <= 0)
-        //    {
-        //        return BadRequest("CustomerId معتبر نیست.");
-        //    }
-
-        // بررسی وجود CustomerId در دیتابیس
-        //    var customerExists = await _context.Customers.AnyAsync(c => c.CustomerId == sale.CustomerId);
-        //    if (!customerExists)
-        //    {
-        //        return BadRequest("مشتری با این شناسه وجود ندارد.");
-        //    }
-
-        //    //try
-        //    //{
-        //        // ثبت فروش در دیتابیس
-        //        _context.Sales.Add(sale);
-        //        await _context.SaveChangesAsync();
-
-        //        // ارسال نوتیفیکیشن به مدیر
-        //        await _notificationService.SendNotificationAsync(1, "فروش جدید",
-        //            $"یک خودرو به مبلغ {sale.Amount:N0} تومان توسط مشتری {sale.CustomerId} در تاریخ {sale.SaleDate:yyyy/MM/dd} فروخته شد.");
-
-        //        return Ok(new
-        //        {
-        //            Message = "فروش با موفقیت ثبت شد و نوتیفیکیشن ارسال شد.",
-        //            SaleId = sale.Id,
-        //            CustomerId = sale.CustomerId,
-        //            Amount = sale.Amount,
-        //            SaleDate = sale.SaleDate
-        //        });
-        //    //}
-        //    //catch (Exception ex)
-        //    //{
-        //    //    return StatusCode(500, $"خطا در ثبت فروش: {ex.Message}");
-        //    //}
-        //}
-
-        // این برای ارسال نوتیف بود 
-
-        //[HttpPost("send-sale-notification/{saleId}")]
-        //public async Task<IActionResult> SendSaleNotification(Guid saleId)
-        //{
-        //    // گرفتن اطلاعات فروش با استفاده از SaleId
-        //    var sale = await _context.Sales
-        //        .Where(s => s.Id == saleId)
-        //        .FirstOrDefaultAsync();
-
-        //    // اگر فروش با این شناسه پیدا نشد
-        //    if (sale == null)
-        //    {
-        //        return NotFound("فروش مورد نظر یافت نشد.");
-        //    }
-
-        //    // بررسی مشتری
-        //    var customer = await _context.buyers
-        //        .Where(c => c.Id == sale.Id)
-        //        .FirstOrDefaultAsync();
-
-        //    // اگر مشتری با این شناسه پیدا نشد
-        //    if (customer == null)
-        //    {
-        //        return NotFound("مشتری مورد نظر یافت نشد.");
-        //    }
-
-        //    // ایجاد نوتیفیکیشن جدید
-        //    //var notification = new Notification
-        //    //{
-        //    //    Title = "فروش جدید",
-        //    //    Message = $"یک خودرو به مبلغ {sale.Amount} با شناسه فروش {sale.Id} فروخته شد.",
-        //    //    CreatedAt = DateTime.Now,
-        //    //    IsRead = false,
-        //    //    CustomerId = customer.CustomerId
-        //    //};
-        //    var notification = new Notification
-        //    (
-        //        "فروش جدید",
-        //       $"یک خودرو به مبلغ {sale.Amount} با شناسه فروش {sale.Id} فروخته شد.",
-        //        DateTime.Now,
-        //        customer.Id
-        //    );
-
-        //    // ذخیره نوتیفیکیشن در دیتابیس
-        //    _context.Notifications.Add(notification);
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok("نوتیفیکیشن با موفقیت ارسال شد.");
-        //}
-
-
-
-
         // ارسال نوتیف و ایمیل با استفاده از سرویس SaleNotificationService
         [HttpPost("send-sale-notification/{saleId}")]
         public async Task<IActionResult> SendSaleNotification(Guid saleId)
@@ -251,7 +150,6 @@ namespace Carproject.Controllers
 
 
 
-
         // 📌 API برای دریافت مشتری و بررسی `InterestedCategories` مشتری علاقمند
         [HttpGet("{customerId}")]
         public async Task<IActionResult> GetCustomer(Guid customerId)
@@ -289,3 +187,103 @@ namespace Carproject.Controllers
 
     }
 }
+
+
+
+//متد ارسال نوتیف با پرکردن فروش
+//[HttpPost("add-sale")]
+//public async Task<IActionResult> AddSale([FromBody] Sale sale)
+//{
+//    // بررسی صحت اطلاعات ورودی
+//    if (sale == null || sale.Amount <= 0)
+//    {
+//        return BadRequest("اطلاعات فروش معتبر نیست.");
+//    }
+
+//    if (sale.CustomerId == null || sale.CustomerId <= 0)
+//    {
+//        return BadRequest("CustomerId معتبر نیست.");
+//    }
+
+// بررسی وجود CustomerId در دیتابیس
+//    var customerExists = await _context.Customers.AnyAsync(c => c.CustomerId == sale.CustomerId);
+//    if (!customerExists)
+//    {
+//        return BadRequest("مشتری با این شناسه وجود ندارد.");
+//    }
+
+//    //try
+//    //{
+//        // ثبت فروش در دیتابیس
+//        _context.Sales.Add(sale);
+//        await _context.SaveChangesAsync();
+
+//        // ارسال نوتیفیکیشن به مدیر
+//        await _notificationService.SendNotificationAsync(1, "فروش جدید",
+//            $"یک خودرو به مبلغ {sale.Amount:N0} تومان توسط مشتری {sale.CustomerId} در تاریخ {sale.SaleDate:yyyy/MM/dd} فروخته شد.");
+
+//        return Ok(new
+//        {
+//            Message = "فروش با موفقیت ثبت شد و نوتیفیکیشن ارسال شد.",
+//            SaleId = sale.Id,
+//            CustomerId = sale.CustomerId,
+//            Amount = sale.Amount,
+//            SaleDate = sale.SaleDate
+//        });
+//    //}
+//    //catch (Exception ex)
+//    //{
+//    //    return StatusCode(500, $"خطا در ثبت فروش: {ex.Message}");
+//    //}
+//}
+
+// این برای ارسال نوتیف بود 
+
+//[HttpPost("send-sale-notification/{saleId}")]
+//public async Task<IActionResult> SendSaleNotification(Guid saleId)
+//{
+//    // گرفتن اطلاعات فروش با استفاده از SaleId
+//    var sale = await _context.Sales
+//        .Where(s => s.Id == saleId)
+//        .FirstOrDefaultAsync();
+
+//    // اگر فروش با این شناسه پیدا نشد
+//    if (sale == null)
+//    {
+//        return NotFound("فروش مورد نظر یافت نشد.");
+//    }
+
+//    // بررسی مشتری
+//    var customer = await _context.buyers
+//        .Where(c => c.Id == sale.Id)
+//        .FirstOrDefaultAsync();
+
+//    // اگر مشتری با این شناسه پیدا نشد
+//    if (customer == null)
+//    {
+//        return NotFound("مشتری مورد نظر یافت نشد.");
+//    }
+
+//    // ایجاد نوتیفیکیشن جدید
+//    //var notification = new Notification
+//    //{
+//    //    Title = "فروش جدید",
+//    //    Message = $"یک خودرو به مبلغ {sale.Amount} با شناسه فروش {sale.Id} فروخته شد.",
+//    //    CreatedAt = DateTime.Now,
+//    //    IsRead = false,
+//    //    CustomerId = customer.CustomerId
+//    //};
+//    var notification = new Notification
+//    (
+//        "فروش جدید",
+//       $"یک خودرو به مبلغ {sale.Amount} با شناسه فروش {sale.Id} فروخته شد.",
+//        DateTime.Now,
+//        customer.Id
+//    );
+
+//    // ذخیره نوتیفیکیشن در دیتابیس
+//    _context.Notifications.Add(notification);
+//    await _context.SaveChangesAsync();
+
+//    return Ok("نوتیفیکیشن با موفقیت ارسال شد.");
+//}

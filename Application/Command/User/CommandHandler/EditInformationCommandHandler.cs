@@ -33,6 +33,7 @@ namespace Application.Command.User.CommandHandler
             user.nationalcode = request.National_Code;
             user.Age = request.Age;
             user.password = request.Password;
+            user.Email = request.Email;
 
             await _genericRepository.SavechangeAsync();
             return ("succesfully Edit ");
