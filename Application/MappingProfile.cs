@@ -30,8 +30,8 @@ namespace Carproject
              //    FileName =file.FileName,
                    // FilePath = file.FilePath
                    //}).ToList())) // نگاشتفایل‌ها
-                .ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files.Select(file =>
-                 new FileBase(file.FileName, file.FilePath)).ToList()))
+                //.ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files.Select(file =>
+                // new FileBase(file.FileName, file.FilePath)).ToList()))
 
 
                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId)); // نگاشت دسته‌بندی

@@ -91,7 +91,7 @@ namespace Infrustructure.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("FileBase");
+                    b.ToTable("CarFiles");
                 });
 
             modelBuilder.Entity("Carproject.Model.Notification", b =>

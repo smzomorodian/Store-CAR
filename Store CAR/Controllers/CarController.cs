@@ -6,8 +6,9 @@ using Carproject.Model;
 using Domain.Model;
 using static Domain.Model.Car;
 using Infrustructure.Context;
-using Application.Command.Car;
+using Application.Command.Car;  
 using Application.DTO.CarDTO;
+using System.Formats.Tar;
 
 namespace Carproject.Controllers
 {
@@ -140,6 +141,48 @@ namespace Carproject.Controllers
             var cars = await query.ToListAsync();
             return Ok(_mapper.Map<IEnumerable<CarDto>>(cars));
         }
+
+
+
+        // فایل
+        [HttpPost("{carId}/Upload")]
+        public async Task<IActionResult> Upload(Guid carId, IFormFile file)
+        {
+            if (file.Length <= 0)
+                return BadRequest("BadRequest");
+
+            var directoryPath = $@"C:\Uploads\Cars";
+
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+
+            var filePath = Path.Combine(directoryPath, file.FileName);
+
+            //var carFile = new FileBase(file.FileName, filePath, carId);
+            var carFile = new FileCar(file.FileName, filePath,carId);
+
+            using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+            await file.CopyToAsync(stream);
+
+            _context.FileBase.Add(carFile);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Id = carFile.Id, Message = "File uploaded successfully" });
+        }
+
+        [HttpGet("{id}/Download")]
+        public async Task<IActionResult> Download(int id)
+        {
+            var carFile = await _context.FileBase.FindAsync(id);
+
+            if (carFile == null)
+                return NotFound("File not found");
+
+            var fileBytes = System.IO.File.ReadAllBytes(carFile.FilePath);
+            return File(fileBytes, "application/octet-stream", carFile.FileName);
+        }
+
+
     }
 }
 //using AutoMapper;

@@ -31,6 +31,8 @@ namespace Infrustructure.Context
 
         public DbSet<Expense> Expenses { get; set; }          // DbSet برای هزینه‌ها
         public DbSet<OperatingExpense> OperatingExpenses { get; set; } // DbSet برای هزینه‌های عملیاتی
+
+        public DbSet<FileBase> FileBase { get; set; }  //فایل کار
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // پیکربندی TPT

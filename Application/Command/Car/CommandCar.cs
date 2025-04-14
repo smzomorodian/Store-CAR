@@ -4,7 +4,9 @@ namespace Application.Command.Car
 {
     public class CommandCar
     {
-        public CommandCar(string brand, string model, int year, string color, decimal price, string vin, List<FileBaseDto> files, int categoryId, CarStatus? status = null, string name = null)
+        public CommandCar(string brand, string model, int year, string color, decimal price, string vin //,List<FileBaseDto> files
+            ,
+            int categoryId, CarStatus? status = null, string name = null)
         {
             Brand = brand;
             Model = model;
@@ -12,7 +14,7 @@ namespace Application.Command.Car
             Color = color;
             Price = price;
             VIN = vin;
-            Files = files ?? new List<FileBaseDto>(); // اگر فایل‌ها ارسال نشوند، لیست خالی ایجاد می‌شود
+            //Files = files ?? new List<FileBaseDto>(); // اگر فایل‌ها ارسال نشوند، لیست خالی ایجاد می‌شود
             CategoryId = categoryId;
             Status = status ?? CarStatus.New;
             Name = name;
@@ -25,7 +27,7 @@ namespace Application.Command.Car
         public string Color { get; set; }
         public decimal Price { get; set; }
         public string VIN { get; set; }
-        public List<FileBaseDto> Files { get; set; } // لیست فایل‌ها
+        //public List<FileBaseDto> Files { get; set; } // لیست فایل‌ها
         public CarStatus? Status { get; set; }
         public int CategoryId { get; set; }
 
