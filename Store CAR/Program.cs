@@ -104,6 +104,10 @@ builder.Services.AddScoped<IReportService, ReportService>();
 // AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+//------------------------------------------------------------
+builder.Services.AddScoped<ICarRepository, CarRepository>();
+builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+
 //command and command handler
 builder.Services.AddScoped<IRequestHandler<UserRegisterCommand<Buyer>, Guid>, UserRegisterCommandHandler<Buyer>>();
 builder.Services.AddScoped<IRequestHandler<UserRegisterCommand<Seller>, Guid>, UserRegisterCommandHandler<Seller>>();

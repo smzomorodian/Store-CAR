@@ -26,7 +26,7 @@ namespace Application.Command.User.CommandHandler
             // ایجاد OTP و ذخیره در دیتابیس
             var otp = new Random().Next(100000, 999999).ToString();
             user.Otp = otp;
-            user.OtpExpiry = DateTime.UtcNow.AddMinutes(5); // اعتبار ۵ دقیقه
+            user.OtpExpiry = DateTime.UtcNow.AddMinutes(10); 
 
             await _genericRepository.SavechangeAsync();
 

@@ -13,7 +13,8 @@ namespace Domain.Model
         }
 
         // کانستراکتور
-        public Car(string brand, string model, int year, string color, decimal price, string vin, CarStatus status, int categoryId, string name)
+        public Car(string brand, string model, int year, string color, decimal price, string vin,
+            CarStatus status, int categoryId, string name)
         {
             Id = Guid.NewGuid();
             Brand = brand;
