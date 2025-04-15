@@ -9,6 +9,7 @@ using Infrustructure.Context;
 using Application.Command.Car;  
 using Application.DTO.CarDTO;
 using System.Formats.Tar;
+using System.Text.RegularExpressions;
 
 namespace Carproject.Controllers
 {
@@ -32,12 +33,21 @@ namespace Carproject.Controllers
             // بررسی داده‌های ورودی
             if (commandCar == null) return BadRequest(new { message = "Invalid data." });
 
+
+            // بررسی فرمت VIN با استفاده از Regex
+            string vinPattern = "^[A-HJ-NPR-Z0-9]{17}$";
+            if (!Regex.IsMatch(commandCar.VIN?.ToUpper() ?? "", vinPattern))
+                return BadRequest(new { message = "VIN must be exactly 17 characters, using only A–Z (except I, O, Q) and digits." });
+
             // بررسی اینکه آیا دسته‌بندی معتبر است
             if (!await _context.CarCategories.AnyAsync(c => c.Id == commandCar.CategoryId))
                 return BadRequest(new { message = "Invalid CategoryId" });
 
             // نگاشت CommandCar به Car با استفاده از AutoMapper
             var car = _mapper.Map<Car>(commandCar);
+
+            // تبدیل VIN به حروف بزرگ قبل از ذخیره
+            car.GetType().GetProperty("VIN")?.SetValue(car, commandCar.VIN.ToUpper());
 
             // اضافه کردن خودرو به پایگاه داده
             _context.Cars.Add(car);
@@ -150,6 +160,18 @@ namespace Carproject.Controllers
         {
             if (file.Length <= 0)
                 return BadRequest("BadRequest");
+
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+            var fileExtension = Path.GetExtension(file.FileName).ToLower();
+
+            if (!allowedExtensions.Contains(fileExtension))
+                return BadRequest("Unsupported file format. Only JPG and PNG are allowed.");
+
+            const long maxFileSize = 5 * 1024 * 1024; // 5 MB
+            if (file.Length > maxFileSize)
+                return BadRequest("File is too large. Max allowed size is 5MB.");
+
+
 
             var directoryPath = $@"C:\Uploads\Cars";
 
