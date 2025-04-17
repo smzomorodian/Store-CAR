@@ -38,7 +38,7 @@ namespace Infrustructure.Repository
 
         public async Task<FileBaseSale> getimagesalefactor(Filesale filesale)
         {
-            await _context.FileBase.AddAsync(filesale);
+            //await _context.FileBase.AddAsync(filesale);
             return (filesale);
         }
 
