@@ -17,7 +17,6 @@ namespace Infrustructure.Context
             }
 
         }
-
         // public DbSet<User> informations { get; set; } // در ساختار TPT نمخواد که کلاس پدر رو درست کنی
         public DbSet<Moder> moders { get; set; }
         public DbSet<Seller> sellers { get; set; }
@@ -26,13 +25,13 @@ namespace Infrustructure.Context
         public DbSet<CarCategory> CarCategories { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<PurchaseHistory> PurchaseHistories { get; set; }
-
         public DbSet<Sale> Sales { get; set; }                // DbSet برای فروش‌ها
 
         public DbSet<Expense> Expenses { get; set; }          // DbSet برای هزینه‌ها
         public DbSet<OperatingExpense> OperatingExpenses { get; set; } // DbSet برای هزینه‌های عملیاتی
 
-        public DbSet<FileBase> FileBase { get; set; }  //فایل کار
+        public DbSet<FileBase> FileBase { get; set; }  //فایل car
+        public DbSet<FileBaseSale> FileBaseSale { get; set; }  //فایل فاکتور
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // پیکربندی TPT

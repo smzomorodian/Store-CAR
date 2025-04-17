@@ -76,7 +76,7 @@ namespace Infrustructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid?>("CarId")
+                    b.Property<Guid>("CarId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FileName")
@@ -87,11 +87,16 @@ namespace Infrustructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("saleId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("CarFiles");
+                    b.HasIndex("saleId");
+
+                    b.ToTable("FileBase");
                 });
 
             modelBuilder.Entity("Carproject.Model.Notification", b =>
@@ -374,7 +379,15 @@ namespace Infrustructure.Migrations
                 {
                     b.HasOne("Domain.Model.Car", null)
                         .WithMany("Files")
-                        .HasForeignKey("CarId");
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Carproject.Model.Sale", null)
+                        .WithMany("Files")
+                        .HasForeignKey("saleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Carproject.Model.Notification", b =>
@@ -448,6 +461,11 @@ namespace Infrustructure.Migrations
                         .HasForeignKey("Domain.Model.Seller", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Carproject.Model.Sale", b =>
+                {
+                    b.Navigation("Files");
                 });
 
             modelBuilder.Entity("Domain.Model.Car", b =>

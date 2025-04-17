@@ -149,6 +149,34 @@ namespace Store_CAR.Controllers
                 return StatusCode(500, $"خطا در ثبت خرید: {ex.Message}");
             }
         }
+        // فایل
+        [HttpPost("{carId}/Upload")]
+        public async Task<IActionResult> Upload(Guid saleID, IFormFile file)
+        {
+            if (file.Length <= 0)
+                return BadRequest("BadRequest");
+
+            var directoryPath = $@"C:\Uploads\Cars";
+
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+
+            var filePath = Path.Combine(directoryPath, file.FileName);
+
+            //var carFile = new FileBase(file.FileName, filePath, carId);
+            var SaleFile = new Filesale(file.FileName, filePath, saleID);
+
+            using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+            await file.CopyToAsync(stream);
+
+            _saleRepository.getimagesalefactor(SaleFile);
+            await _genericrepository.SavechangeAsync();
+
+            return Ok(new { Id = SaleFile.Id, Message = "File uploaded successfully" });
+        }
+
+
+
         [HttpPost("mark-as-pay")]
         public async Task<IActionResult> MarkAsRead(Guid saleid)
         {
@@ -162,4 +190,41 @@ namespace Store_CAR.Controllers
         }
     }
 }
+//// فایل
+//[HttpPost("{carId}/Upload")]
+//public async Task<IActionResult> Upload(Guid carId, IFormFile file)
+//{
+//    if (file.Length <= 0)
+//        return BadRequest("BadRequest");
+
+//    var directoryPath = $@"C:\Uploads\Cars";
+
+//    if (!Directory.Exists(directoryPath))
+//        Directory.CreateDirectory(directoryPath);
+
+//    var filePath = Path.Combine(directoryPath, file.FileName);
+
+//    //var carFile = new FileBase(file.FileName, filePath, carId);
+//    var carFile = new FileCar(file.FileName, filePath, carId);
+
+//    using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+//    await file.CopyToAsync(stream);
+
+//    _context.FileBase.Add(carFile);
+//    await _context.SaveChangesAsync();
+
+//    return Ok(new { Id = carFile.Id, Message = "File uploaded successfully" });
+//}
+
+//[HttpGet("{id}/Download")]
+//public async Task<IActionResult> Download(int id)
+//{
+//    var carFile = await _context.FileBase.FindAsync(id);
+
+//    if (carFile == null)
+//        return NotFound("File not found");
+
+//    var fileBytes = System.IO.File.ReadAllBytes(carFile.FilePath);
+//    return File(fileBytes, "application/octet-stream", carFile.FileName);
+//}
 

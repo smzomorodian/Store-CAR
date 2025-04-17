@@ -1,4 +1,5 @@
 ﻿using Carproject.Model;
+using Domain.Model;
 using Infrustructure.Context;
 using Infrustructure.Repository.IRepository;
 using System;
@@ -35,5 +36,17 @@ namespace Infrustructure.Repository
             return buyer;
         }
 
+        public async Task<FileBaseSale> getimagesalefactor(Filesale filesale)
+        {
+            await _context.FileBase.AddAsync(filesale);
+            return (filesale);
+        }
+
+        //Task<FileBase> ISaleRepository.getimagesalefactor(Filesale filesale)
+        //{
+        //    //    await _context.FileBase.AddAsync(filesale);
+        //    //    return (filesale);
+
+        //}
     }
 }

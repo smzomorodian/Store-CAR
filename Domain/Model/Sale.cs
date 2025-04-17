@@ -4,9 +4,6 @@ namespace Carproject.Model
 {
     public class Sale
     {
-
-
-
         public Guid Id { get; set; }               // شناسه فروش
         public DateTime SaleDate { get; set; }    // تاریخ فروش
         public decimal Amount { get; set; }      // مبلغ فروش
@@ -16,12 +13,16 @@ namespace Carproject.Model
         public Car Car { get; set; }         // اطلاعات خودرو
         public int? stock { get; set; }     // تعدادماشین های موجود
         public bool Ispay { get; set; } = false; // تایید خرید
+
+        public List<FileBaseSale> Files { get; private set; } = new List<FileBaseSale>(); // فرض بر این است که FileBase کلاسی از فایل‌ها باشد.
+
+
         public Sale()
         {
 
         }
 
-        public Sale(DateTime saleDate, decimal amount, Guid buyerId, Guid carId , bool ispay)
+        public Sale(DateTime saleDate, decimal amount, Guid buyerId, Guid carId, bool ispay)
         {
             Id = Guid.NewGuid();
             SaleDate = saleDate;
@@ -29,6 +30,7 @@ namespace Carproject.Model
             BuyerId = buyerId;
             CarId = carId;
             Ispay = ispay;
+            Files = new List<FileBaseSale>();
         }
     }
 

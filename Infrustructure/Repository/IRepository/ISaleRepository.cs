@@ -13,5 +13,6 @@ namespace Infrustructure.Repository.IRepository
         Task<Sale> AddSaleAsync(Sale sale);
         Task<Buyer> GetBuyerByIdAsync(Guid buyerId);
         Task<Sale> GetBSaleByIdAsync(Guid selerId);
+        Task<FileBaseSale> getimagesalefactor(Filesale filesale);
     }
 }
