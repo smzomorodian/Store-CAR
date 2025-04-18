@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using usermodel = Domain.Model.User;
+using usermodel = Domain.Model.UserModel.User;
 namespace Application.Command.User.CommandHandler
 {
     public class RequestOtpCommandHandler<T>(IRepository<T> genericRepository, IUserInfoRepository<T> userInfoRepository) 

@@ -1,7 +1,7 @@
 ﻿using Application.Command.User.Command;
 using Infrustructure.Repository.IRepository;
 using MediatR;
-using Usermodel = Domain.Model.User;
+using Usermodel = Domain.Model.UserModel.User;
 
 public class VerifyOtpCommandHandler<T> : IRequestHandler<VerifyOtpCommand<T>, string> where T : Usermodel
 {

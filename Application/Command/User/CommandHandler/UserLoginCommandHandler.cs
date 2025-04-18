@@ -1,5 +1,4 @@
 ﻿using Application.Command.User.Command;
-using Domain.Model;
 using FirebaseAdmin.Auth;
 using Infrustructure.Repository.IRepository;
 using MediatR;
@@ -11,7 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Usermodel = Domain.Model.User;
+using Usermodel = Domain.Model.UserModel.User;
 
 namespace Application.Command.User.CommandHandler
 {

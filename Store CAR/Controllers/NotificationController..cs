@@ -1,8 +1,8 @@
 ﻿using Application.Services;
 using AutoMapper;
 using Carproject.DTO;
-using Carproject.Model;
 using Carproject.Services;
+using Domain.Model.ReportNotifModel;
 using Infrustructure.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +60,7 @@ namespace Carproject.Controllers
 
 
             var notifications = await _context.Notifications
-                .Where(n => n.CustomerId == customerId)  // تغییر از UserId به CustomerId
+                .Where(n => n.BuyerId == customerId)  // تغییر از UserId به CustomerId
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
 
@@ -78,7 +78,7 @@ namespace Carproject.Controllers
             var notification = await _context.Notifications.FindAsync(notificationId);
             if (notification == null) return NotFound();
 
-            notification.IsRead = true;
+            notification.MarkAsRead();
             await _context.SaveChangesAsync();
 
             return Ok("نوتیفیکیشن به عنوان خوانده‌شده علامت‌گذاری شد.");

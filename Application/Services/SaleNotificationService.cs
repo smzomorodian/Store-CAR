@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.DTO;
-using Carproject.Model;
 using Domain.Model;
+using Domain.Model.ReportNotifModel;
+using Domain.Model.UserModel;
 using Infrustructure.Context;
 using Microsoft.EntityFrameworkCore;
 

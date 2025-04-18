@@ -1,6 +1,6 @@
 ﻿using Application.DTO.CarDTO;
-using Carproject.Model;
-using Domain.Model;
+using Domain.Model.CarModel;
+using Domain.Model.UserModel;
 using Infrustructure.Context;
 using Infrustructure.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
@@ -58,9 +58,9 @@ namespace Carproject.Controllers
             }
 
             var category = new CarCategory
-            {
-                Name = categoryDto.Name
-            };
+            (
+                categoryDto.Name
+            );
 
             //_context.CarCategories.Add(category);
             _genericRepository.AddAsync(category);
@@ -105,10 +105,10 @@ namespace Carproject.Controllers
                 if (!buyer.InterestedCategories.Any(ic => ic.CategoryId == categoryId))
                 {
                     buyer.InterestedCategories.Add(new BuyerCategory
-                    {
-                        BuyerId = buyerId,
-                        CategoryId = categoryId
-                    });
+                    (
+                       buyerId,
+                       categoryId
+                    ));
                 }
             } 
 

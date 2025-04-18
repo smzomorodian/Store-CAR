@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrustructure.Repository.IRepository
+namespace Domain.Model.UserModel
 {
     public interface IUserInformation
     {

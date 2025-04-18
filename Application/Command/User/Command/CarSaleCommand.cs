@@ -5,7 +5,7 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//namespace Application.Command.User.Command
+//namespace Application.Command.UserModel.Command
 //{
 //    public class CarSaleCommand : IRequest<>
 //    {

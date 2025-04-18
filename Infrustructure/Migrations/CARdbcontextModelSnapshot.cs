@@ -22,200 +22,7 @@ namespace Infrustructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Carproject.Model.BuyerCategory", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<Guid>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("BuyerId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("BuyerCategory");
-                });
-
-            modelBuilder.Entity("Carproject.Model.Expense", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Expenses");
-                });
-
-            modelBuilder.Entity("Carproject.Model.FileBase", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid?>("CarId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarId");
-
-                    b.ToTable("CarFiles");
-                });
-
-            modelBuilder.Entity("Carproject.Model.Notification", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CarId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Notifications");
-                });
-
-            modelBuilder.Entity("Carproject.Model.OperatingExpense", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OperatingExpenses");
-                });
-
-            modelBuilder.Entity("Carproject.Model.PurchaseHistory", b =>
-                {
-                    b.Property<Guid>("PurchaseHistoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("PurchaseAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("PurchaseDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("PurchaseHistoryId");
-
-                    b.HasIndex("BuyerId");
-
-                    b.ToTable("PurchaseHistories");
-                });
-
-            modelBuilder.Entity("Carproject.Model.Sale", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CarId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Ispay")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("SaleDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("stock")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BuyerId");
-
-                    b.HasIndex("CarId");
-
-                    b.ToTable("Sales");
-                });
-
-            modelBuilder.Entity("Domain.Model.Car", b =>
+            modelBuilder.Entity("Domain.Model.CarModel.Car", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -225,10 +32,17 @@ namespace Infrustructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilesIds")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilesIdsList")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -260,13 +74,11 @@ namespace Infrustructure.Migrations
                     b.ToTable("Cars");
                 });
 
-            modelBuilder.Entity("Domain.Model.CarCategory", b =>
+            modelBuilder.Entity("Domain.Model.CarModel.CarCategory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -277,7 +89,194 @@ namespace Infrustructure.Migrations
                     b.ToTable("CarCategories");
                 });
 
-            modelBuilder.Entity("Domain.Model.User", b =>
+            modelBuilder.Entity("Domain.Model.File.FileBase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FileBase");
+                });
+
+            modelBuilder.Entity("Domain.Model.ReportNotifModel.Expense", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Expenses");
+                });
+
+            modelBuilder.Entity("Domain.Model.ReportNotifModel.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CarId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("Domain.Model.ReportNotifModel.OperatingExpense", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OperatingExpenses");
+                });
+
+            modelBuilder.Entity("Domain.Model.ReportNotifModel.PurchaseHistory", b =>
+                {
+                    b.Property<Guid>("PurchaseHistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("PurchaseAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("PurchaseHistoryId");
+
+                    b.HasIndex("BuyerId");
+
+                    b.ToTable("PurchaseHistories");
+                });
+
+            modelBuilder.Entity("Domain.Model.ReportNotifModel.Sale", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CarId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileIdsList")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilesIds")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Ispay")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("SaleDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("stock")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("CarId");
+
+                    b.ToTable("Sales");
+                });
+
+            modelBuilder.Entity("Domain.Model.UserModel.BuyerCategory", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("BuyerCategory");
+                });
+
+            modelBuilder.Entity("Domain.Model.UserModel.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -324,9 +323,9 @@ namespace Infrustructure.Migrations
                     b.UseTptMappingStrategy();
                 });
 
-            modelBuilder.Entity("Buyer", b =>
+            modelBuilder.Entity("Domain.Model.UserModel.Buyer", b =>
                 {
-                    b.HasBaseType("Domain.Model.User");
+                    b.HasBaseType("Domain.Model.UserModel.User");
 
                     b.Property<int>("LoyaltyStatus")
                         .HasColumnType("int");
@@ -337,71 +336,56 @@ namespace Infrustructure.Migrations
                     b.ToTable("buyers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Model.Moder", b =>
+            modelBuilder.Entity("Domain.Model.UserModel.Moder", b =>
                 {
-                    b.HasBaseType("Domain.Model.User");
+                    b.HasBaseType("Domain.Model.UserModel.User");
 
                     b.ToTable("Moders", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Model.Seller", b =>
+            modelBuilder.Entity("Domain.Model.UserModel.Seller", b =>
                 {
-                    b.HasBaseType("Domain.Model.User");
+                    b.HasBaseType("Domain.Model.UserModel.User");
 
                     b.ToTable("sellers", (string)null);
                 });
 
-            modelBuilder.Entity("Carproject.Model.BuyerCategory", b =>
+            modelBuilder.Entity("Domain.Model.CarModel.Car", b =>
                 {
-                    b.HasOne("Buyer", "Buyer")
-                        .WithMany("InterestedCategories")
-                        .HasForeignKey("BuyerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Model.CarCategory", "Category")
+                    b.HasOne("Domain.Model.CarModel.CarCategory", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Buyer");
-
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Carproject.Model.FileBase", b =>
+            modelBuilder.Entity("Domain.Model.ReportNotifModel.Notification", b =>
                 {
-                    b.HasOne("Domain.Model.Car", null)
-                        .WithMany("Files")
-                        .HasForeignKey("CarId");
-                });
-
-            modelBuilder.Entity("Carproject.Model.Notification", b =>
-                {
-                    b.HasOne("Domain.Model.User", "User")
+                    b.HasOne("Domain.Model.UserModel.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Carproject.Model.PurchaseHistory", b =>
+            modelBuilder.Entity("Domain.Model.ReportNotifModel.PurchaseHistory", b =>
                 {
-                    b.HasOne("Buyer", null)
+                    b.HasOne("Domain.Model.UserModel.Buyer", null)
                         .WithMany("PurchaseHistories")
                         .HasForeignKey("BuyerId");
                 });
 
-            modelBuilder.Entity("Carproject.Model.Sale", b =>
+            modelBuilder.Entity("Domain.Model.ReportNotifModel.Sale", b =>
                 {
-                    b.HasOne("Buyer", "Buyer")
+                    b.HasOne("Domain.Model.UserModel.Buyer", "Buyer")
                         .WithMany("Sales")
                         .HasForeignKey("BuyerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Model.Car", "Car")
+                    b.HasOne("Domain.Model.CarModel.Car", "Car")
                         .WithMany()
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -412,50 +396,53 @@ namespace Infrustructure.Migrations
                     b.Navigation("Car");
                 });
 
-            modelBuilder.Entity("Domain.Model.Car", b =>
+            modelBuilder.Entity("Domain.Model.UserModel.BuyerCategory", b =>
                 {
-                    b.HasOne("Domain.Model.CarCategory", "Category")
+                    b.HasOne("Domain.Model.UserModel.Buyer", "Buyer")
+                        .WithMany("InterestedCategories")
+                        .HasForeignKey("BuyerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Model.CarModel.CarCategory", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Buyer");
+
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Buyer", b =>
+            modelBuilder.Entity("Domain.Model.UserModel.Buyer", b =>
                 {
-                    b.HasOne("Domain.Model.User", null)
+                    b.HasOne("Domain.Model.UserModel.User", null)
                         .WithOne()
-                        .HasForeignKey("Buyer", "Id")
+                        .HasForeignKey("Domain.Model.UserModel.Buyer", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Model.Moder", b =>
+            modelBuilder.Entity("Domain.Model.UserModel.Moder", b =>
                 {
-                    b.HasOne("Domain.Model.User", null)
+                    b.HasOne("Domain.Model.UserModel.User", null)
                         .WithOne()
-                        .HasForeignKey("Domain.Model.Moder", "Id")
+                        .HasForeignKey("Domain.Model.UserModel.Moder", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Model.Seller", b =>
+            modelBuilder.Entity("Domain.Model.UserModel.Seller", b =>
                 {
-                    b.HasOne("Domain.Model.User", null)
+                    b.HasOne("Domain.Model.UserModel.User", null)
                         .WithOne()
-                        .HasForeignKey("Domain.Model.Seller", "Id")
+                        .HasForeignKey("Domain.Model.UserModel.Seller", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Model.Car", b =>
-                {
-                    b.Navigation("Files");
-                });
-
-            modelBuilder.Entity("Buyer", b =>
+            modelBuilder.Entity("Domain.Model.UserModel.Buyer", b =>
                 {
                     b.Navigation("InterestedCategories");
 

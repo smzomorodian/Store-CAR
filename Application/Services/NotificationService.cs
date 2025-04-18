@@ -1,5 +1,4 @@
-﻿using Carproject.Model;
-using Infrustructure.Context;
+﻿using Infrustructure.Context;
 
 namespace Carproject.Services
 {

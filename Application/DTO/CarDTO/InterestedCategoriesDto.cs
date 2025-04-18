@@ -8,7 +8,7 @@ namespace Application.DTO.CarDTO
 {
     public class InterestedCategoriesDto
     {
-        public List<int> CategoryId { get; set; }
+        public List<Guid> CategoryId { get; set; }
 
     }
 }

@@ -1,4 +1,4 @@
-﻿using static Domain.Model.Car;
+﻿using static Domain.Model.CarModel.Car;
 
 namespace Application.DTO.CarDTO
 {
@@ -16,7 +16,7 @@ namespace Application.DTO.CarDTO
         public string Status { get; set; }
 
         // دسته‌بندی
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
 
         public string CategoryName { get; set; }
     }

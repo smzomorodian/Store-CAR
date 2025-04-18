@@ -1,5 +1,4 @@
-﻿using Carproject.Model;
-
+﻿
 namespace Carproject.DTO
 {
     public class CustomerDto

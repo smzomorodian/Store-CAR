@@ -1,4 +1,4 @@
-﻿using Domain.Model;
+﻿using Domain.Model.CarModel;
 using Infrustructure.Context;
 using Infrustructure.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +27,9 @@ namespace Infrustructure.Repository
             decimal? minPrice,
             decimal? maxPrice,
             string color,
-            Car.CarStatus? status)
+            Car.CarStatus? status,
+            Guid? categoryId
+            )
         {
             var query = _context.Cars.AsQueryable();
 
@@ -64,23 +66,27 @@ namespace Infrustructure.Repository
                 query = query.Where(c => c.Status == status.Value);
             }
 
+            if (categoryId.HasValue) 
+            {
+                query = query.Where(c => c.CategoryId == categoryId.Value);  
+            }
+
             return await query.ToListAsync();
         }
 
         public async Task<List<Car>> GetAllCarsAsync()
         {
-            return await _context.Cars.ToListAsync();
+            return await _context.Cars
+                .Include(c => c.Category)
+                .ToListAsync();
         }
 
-        public async Task<Car> GetCarByIdAsync(Guid carId)
+        public async Task<Car?> GetCarByIdAsync(Guid carId)
         {
-            return await _context.Cars.FindAsync(carId);
+            return await _context.Cars
+                .Include(c => c.Category) 
+                .FirstOrDefaultAsync(c => c.Id == carId);
         }
-
-        //public Task<Car> AddCarAsync(Car car)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         public async Task<Car> UpdateCarAsync(Car car)
         {
@@ -93,6 +99,29 @@ namespace Infrustructure.Repository
         {
             throw new NotImplementedException();
         }
+
+
+        public async Task AddCarAsync(Car car)
+        {
+            await _context.Cars.AddAsync(car);
+        }
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+
+        public async Task<bool> IsCategoryValidAsync(Guid categoryId)
+        {
+            return await _context.CarCategories.AnyAsync(c => c.Id == categoryId);
+        }
+
+        public async Task<CarCategory?> GetDefaultCategoryAsync()
+        {
+            return await _context.CarCategories.FirstOrDefaultAsync();
+        }
+
     }
 
 }

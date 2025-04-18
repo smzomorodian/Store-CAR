@@ -1,4 +1,4 @@
-﻿using Domain.Model;
+﻿using Domain.Model.CarModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

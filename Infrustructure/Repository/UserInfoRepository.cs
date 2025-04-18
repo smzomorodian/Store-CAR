@@ -1,4 +1,5 @@
-﻿using Infrustructure.Context;
+﻿using Domain.Model.UserModel;
+using Infrustructure.Context;
 using Infrustructure.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -30,5 +31,12 @@ namespace Infrustructure.Repository
         {
             return await _context.Set<T>().FirstOrDefaultAsync(x => x.phonenumber == phonenumber);
         }
+
+        public async Task<Buyer?> GetByIdAsync(Guid Id)
+        {
+            return await _context.buyers
+                .FirstOrDefaultAsync(b => b.Id == Id);
+        }
+
     }
 }

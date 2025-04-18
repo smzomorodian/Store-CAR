@@ -5,10 +5,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Domain;
-using Infrustructure.Repository.IRepository;
 
-namespace Domain.Model
+namespace Domain.Model.UserModel
 {
     public abstract class User : IUserInformation
     {

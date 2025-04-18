@@ -1,6 +1,8 @@
-﻿using Domain.Model;
-using Carproject.Model;
-using Microsoft.EntityFrameworkCore; // برای Information
+﻿using Microsoft.EntityFrameworkCore;
+using Domain.Model.UserModel;
+using Domain.Model.ReportNotifModel;
+using Domain.Model.CarModel;
+using Domain.Model.File;
 
 namespace Infrustructure.Context
 {
@@ -13,12 +15,12 @@ namespace Infrustructure.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=localhost;Database=CARDB;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=CARSTORY;Trusted_Connection=True;");
             }
 
         }
 
-        // public DbSet<User> informations { get; set; } // در ساختار TPT نمخواد که کلاس پدر رو درست کنی
+        // public DbSet<UserModel> informations { get; set; } // در ساختار TPT نمخواد که کلاس پدر رو درست کنی
         public DbSet<Moder> moders { get; set; }
         public DbSet<Seller> sellers { get; set; }
         public DbSet<Buyer> buyers { get; set; }
@@ -32,7 +34,10 @@ namespace Infrustructure.Context
         public DbSet<Expense> Expenses { get; set; }          // DbSet برای هزینه‌ها
         public DbSet<OperatingExpense> OperatingExpenses { get; set; } // DbSet برای هزینه‌های عملیاتی
 
-        public DbSet<FileBase> FileBase { get; set; }  //فایل کار
+
+        public DbSet<FileBase> FileBase { get; set; }  //فایل خرید
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // پیکربندی TPT
@@ -46,6 +51,7 @@ namespace Infrustructure.Context
             modelBuilder.Entity<Seller>()
                 .ToTable("sellers")
                 .HasBaseType<User>();
+
 
             modelBuilder.Entity<Buyer>()
                 .ToTable("buyers")

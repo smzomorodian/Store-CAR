@@ -59,7 +59,7 @@
 //        //    var user = await _cARdbcontext.moders.FirstOrDefaultAsync(x => x.Password == logingmoderDTO.Password && x.Name == logingmoderDTO.Name);
 //        //    if (user == null)
 //        //    {
-//        //        return BadRequest("User not foun");
+//        //        return BadRequest("UserModel not foun");
 //        //    }
 //        //    var tokenHandeler = new JwtSecurityTokenHandler();
 //        //    var key = Encoding.ASCII.GetBytes(secretKey);
@@ -256,7 +256,7 @@
 //            var user = await _userInfoRepository.getpassword(registermoderDTO.Password);
 //            if (user == null)
 //            {
-//                return BadRequest("User Not Found");
+//                return BadRequest("UserModel Not Found");
 //            }
 //            user.Name = registermoderDTO.Name;
 //            user.phonenumber = registermoderDTO.Phonenmber;

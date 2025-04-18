@@ -3,8 +3,7 @@ using Application.DTO.CarDTO;
 using AutoMapper;
 
 using Carproject.DTO;
-using Carproject.Model;
-using Domain.Model;
+using Domain.Model.CarModel;
 
 namespace Carproject
 {

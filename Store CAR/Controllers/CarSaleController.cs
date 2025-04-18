@@ -1,10 +1,12 @@
 ﻿using Application.DTO.CarDTO;
-using Carproject.Model;
-using Domain.Model;
+using Domain.Model.CarModel;
+using Domain.Model.File;
+using Domain.Model.ReportNotifModel;
+using Domain.Model.UserModel;
 using Infrustructure.Repository.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace Store_CAR.Controllers
 {
@@ -12,75 +14,29 @@ namespace Store_CAR.Controllers
     [ApiController]
     public class CarSaleController : ControllerBase
     {
-    private readonly ICarRepository _carRepository;
-    private readonly ISaleRepository _saleRepository;
-    private readonly IRepository<Buyer> _genericrepository;
-    private readonly IUserInfoRepository<Buyer> _userInfoRepository;
+        private readonly ICarRepository _carRepository;
+        private readonly ISaleRepository _saleRepository;
+        private readonly IFileRepository _fileRepository;
+        private readonly IRepository<Buyer> _genericRepository;
+        private readonly IUserInfoRepository<Buyer> _userInfoRepository;
 
-    public CarSaleController(
-        ICarRepository carRepository,
-        ISaleRepository saleRepository,
-        IRepository<Buyer> genericrepository,
-        IUserInfoRepository<Buyer> userInfoRepository)
-    {
-        _carRepository = carRepository;
-        _saleRepository = saleRepository;
-        _genericrepository = genericrepository;
-        _userInfoRepository = userInfoRepository;
-    }
-
-        //// فیلتر کردن خودروها بر اساس پارامترهای ورودی
-        [HttpGet("filter")]
-        public async Task<IActionResult> GetFilteredCars(
-            [FromQuery] string brand,
-            [FromQuery] string model,
-            [FromQuery] int? minYear,
-            [FromQuery] int? maxYear,
-            [FromQuery] decimal? minPrice,
-            [FromQuery] decimal? maxPrice,
-            [FromQuery] string color,
-            [FromQuery] Car.CarStatus? status)
+        public CarSaleController(
+            ICarRepository carRepository,
+            ISaleRepository saleRepository,
+            IRepository<Buyer> genericRepository,
+            IUserInfoRepository<Buyer> userInfoRepository,
+            IFileRepository fileRepository)
         {
-            try
-            {
-                // فراخوانی متد repository برای دریافت خودروها بر اساس فیلترهای ورودی
-                var cars = await _carRepository.GetFilteredCarsAsync(brand, model, minYear, maxYear, minPrice, maxPrice, color, status);
-
-                // بررسی نتیجه و ارسال پاسخ مناسب
-                if (cars == null || cars.Count == 0)
-                {
-                    return NotFound("هیچ خودرویی مطابق با فیلتر پیدا نشد.");
-                }
-
-                return Ok(cars);
-            }
-            catch (Exception ex)
-            {
-                // مدیریت استثناها و خطاها
-                return StatusCode(500, $"خطا در دریافت داده‌ها: {ex.Message}");
-            }
+            _carRepository = carRepository;
+            _saleRepository = saleRepository;
+            _genericRepository = genericRepository;
+            _userInfoRepository = userInfoRepository;
+            _fileRepository = fileRepository;
         }
 
-        // دریافت تمامی خودروها
-        [HttpGet]
-        public async Task<IActionResult> GetAllCars()
-        {
-            try
-            {
-                var cars = await _carRepository.GetAllCarsAsync();
-                if (cars == null || cars.Count == 0)
-                {
-                    return NotFound("هیچ خودرویی پیدا نشد.");
-                }
-                return Ok(cars);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"خطا در دریافت خودروها: {ex.Message}");
-            }
-        }
 
-        // دریافت خودرو بر اساس شناسه
+
+
         [HttpGet("{carId}")]
         public async Task<IActionResult> GetCarById(Guid carId)
         {
@@ -98,13 +54,12 @@ namespace Store_CAR.Controllers
                 return StatusCode(500, $"خطا در دریافت خودرو: {ex.Message}");
             }
         }
-        // انتخاب خودرو برای خرید
+
         [HttpPost("BuyCar")]
         public async Task<IActionResult> BuyCar([FromBody] BuyCarDTO buyCarDto)
         {
             try
             {
-                // ابتدا بررسی می‌کنیم که آیا خودرو وجود دارد و در وضعیت "فروخته شده" نیست
                 var car = await _carRepository.GetCarByIdAsync(buyCarDto.CarId);
                 if (car == null)
                 {
@@ -116,29 +71,16 @@ namespace Store_CAR.Controllers
                     return BadRequest("این خودرو قبلاً فروخته شده است.");
                 }
 
-                // بررسی خریدار
-                var buyer = await _saleRepository.GetBuyerByIdAsync(buyCarDto.BuyerId);
+                var buyer = await _userInfoRepository.GetByIdAsync(buyCarDto.BuyerId);
                 if (buyer == null)
                 {
                     return NotFound("خریدار با این شناسه پیدا نشد.");
                 }
 
-                // ایجاد یک رکورد جدید در جدول فروش
-                var sale = new Sale
-                {
-                    Id = Guid.NewGuid(), // بسیار مهم
-                    CarId = buyCarDto.CarId,
-                    BuyerId = buyCarDto.BuyerId,
-                    SaleDate = DateTime.Now,
-                    Amount = car.Price,
-                    stock = 1 // اگر نیاز هست، در غیر این صورت حذفش کن یا مقدار پیش‌فرض بده
-                };
-
-                // ثبت خرید در پایگاه داده
+                var sale = new Sale(DateTime.Now, car.Price, buyCarDto.BuyerId, buyCarDto.CarId, false);
                 var createdSale = await _saleRepository.AddSaleAsync(sale);
-                await _genericrepository.SavechangeAsync();
+                await _genericRepository.SavechangeAsync();
 
-                // به‌روزرسانی وضعیت خودرو به "فروخته شده"
                 car.SetStatus(Car.CarStatus.Sold);
                 await _carRepository.UpdateCarAsync(car);
 
@@ -149,17 +91,123 @@ namespace Store_CAR.Controllers
                 return StatusCode(500, $"خطا در ثبت خرید: {ex.Message}");
             }
         }
-        [HttpPost("mark-as-pay")]
-        public async Task<IActionResult> MarkAsRead(Guid saleid)
+
+            [HttpPost("mark-as-pay")]
+        public async Task<IActionResult> MarkAsPaid(Guid saleId)
         {
-            var sale = await _saleRepository.GetBSaleByIdAsync(saleid);
+            var sale = await _saleRepository.GetSaleByIdAsync(saleId);
             if (sale == null) return NotFound();
 
-            sale.Ispay = true;
-            await _genericrepository.SavechangeAsync();
+            sale.MarkAsPaid();
+            await _genericRepository.SavechangeAsync();
 
             return Ok("سفارش شما تایید شد.");
         }
+
+        [HttpPost("Sale/{saleId}/UploadFile")]
+        public async Task<IActionResult> UploadFile(Guid saleId, IFormFile file)
+        {
+            if (file.Length <= 0)
+                return BadRequest("BadRequest");
+
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+            var fileExtension = Path.GetExtension(file.FileName).ToLower();
+
+            if (!allowedExtensions.Contains(fileExtension))
+                return BadRequest("Unsupported file format. Only JPG and PNG are allowed.");
+
+            const long maxFileSize = 5 * 1024 * 1024; // 5 MB
+            if (file.Length > maxFileSize)
+                return BadRequest("File is too large. Max allowed size is 5MB.");
+
+            var directoryPath = $@"C:\Uploads\Sales";
+
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+
+            var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+            var filePath = Path.Combine(directoryPath, uniqueFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var saleFile = new FileBase(file.FileName, filePath);
+            await _fileRepository.AddFileAsync(saleFile);
+            await _fileRepository.SaveAsync();
+
+            var sale = await _saleRepository.GetSaleByIdAsync(saleId);
+            if (sale == null)
+                return NotFound("Sale not found.");
+
+            sale.AddFileId(saleFile.Id);
+            await _saleRepository.UpdateSaleAsync(sale);
+
+            return Ok(new { Id = saleFile.Id, Message = "File uploaded successfully" });
+        }
+
+        [HttpGet("Sale/{saleId}/DownloadFile/{fileId}")]
+        public async Task<IActionResult> DownloadFile(Guid saleId, Guid fileId)
+        {
+            var sale = await _saleRepository.GetSaleByIdAsync(saleId);
+            if (sale == null)
+                return NotFound("Sale not found.");
+
+            var file = await _fileRepository.GetFileByIdAsync(fileId);
+            if (file == null)
+                return NotFound("File not found.");
+
+            var fileIdsList = string.IsNullOrWhiteSpace(sale.FilesIds)
+                ? new List<string>()
+                : sale.FilesIds.Split(',').ToList();
+
+            if (!fileIdsList.Contains(fileId.ToString()))
+                return BadRequest("File does not belong to this sale.");
+
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(file.FilePath);
+            var fileExtension = Path.GetExtension(file.FileName).ToLower();
+            var mimeType = fileExtension switch
+            {
+                ".jpg" => "image/jpeg",
+                ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                _ => "application/octet-stream"
+            };
+
+            return File(fileBytes, mimeType, file.FileName);
+        }
+
+        [HttpDelete("Sale/{saleId}/DeleteFile/{fileId}")]
+        public async Task<IActionResult> DeleteFile(Guid saleId, Guid fileId)
+        {
+            var sale = await _saleRepository.GetSaleByIdAsync(saleId);
+            if (sale == null)
+                return NotFound("Sale not found.");
+
+            var file = await _fileRepository.GetFileByIdAsync(fileId);
+            if (file == null)
+                return NotFound("File not found.");
+
+            var fileIdsList = string.IsNullOrWhiteSpace(sale.FilesIds)
+                ? new List<string>()
+                : sale.FilesIds.Split(',').ToList();
+
+            if (!fileIdsList.Contains(fileId.ToString()))
+                return BadRequest("File does not belong to this sale.");
+
+            if (System.IO.File.Exists(file.FilePath))
+            {
+                System.IO.File.Delete(file.FilePath);
+            }
+
+            await _fileRepository.DeleteFileAsync(file);
+            await _fileRepository.SaveAsync();
+
+            sale.RemoveFileId(fileId);
+            await _saleRepository.UpdateSaleAsync(sale);
+
+            return Ok(new { Message = "File deleted successfully" });
+        }
     }
 }
-

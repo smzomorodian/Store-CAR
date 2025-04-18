@@ -6,7 +6,7 @@ using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Usermodel = Domain.Model.User;
+using Usermodel = Domain.Model.UserModel.User;
 
 namespace Application.Command.User.CommandHandler
 {

@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 using System.Net;
-using Domain.Model;
+using Domain.Model.UserModel;
 
 public interface IEmailService
 {

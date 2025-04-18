@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
 
-namespace Domain.Model
+namespace Domain.Model.UserModel
 {
     public class Moder : User
     {
         public Moder() : base() { }
-        public Moder(string name , string age , string nationalcode , string password, string phonenumber , string role,string email) 
-            : base( name,  age, nationalcode,  password,  phonenumber,  role, email)
+        public Moder(string name, string age, string nationalcode, string password, string phonenumber, string role, string email)
+            : base(name, age, nationalcode, password, phonenumber, role, email)
         {
 
         }

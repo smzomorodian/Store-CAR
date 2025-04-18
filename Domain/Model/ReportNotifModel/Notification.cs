@@ -1,6 +1,7 @@
-﻿using Domain.Model;
+﻿using System;
+using Domain.Model.UserModel;
 
-namespace Carproject.Model
+namespace Domain.Model.ReportNotifModel
 {
     public class Notification
     {
@@ -13,17 +14,17 @@ namespace Carproject.Model
         //    CreatedAt = createdAt;
         //    CarId = carId;
         //    CustomerId = customerId;
-           
+
         //}
 
-        public Notification(string title, string message, DateTime createdAt, Guid carId, Guid customerId)
+        public Notification(string title, string message, DateTime createdAt, Guid carId, Guid buyerId)
         {
             Id = Guid.NewGuid();
             Title = title;
             Message = message;
             CreatedAt = createdAt;
             CarId = carId;
-            CustomerId = customerId;
+            BuyerId = buyerId;
         }
 
 
@@ -34,16 +35,24 @@ namespace Carproject.Model
             Title = title;
             Message = message;
             CreatedAt = createdAt;
-            CustomerId = customerId;
+            BuyerId = customerId;
         }
 
-        public Guid Id { get; set; }               // شناسه نوتیفیکیشن
-        public string Title { get; set; }         // عنوان نوتیفیکیشن
-        public string Message { get; set; }       // متن پیام
-        public DateTime CreatedAt { get; set; }   // زمان ایجاد
-        public bool IsRead { get; set; }          // آیا خوانده شده است؟
+        public Guid Id { get; private set; }               // شناسه نوتیفیکیشن
+        public string Title { get; private set; }         // عنوان نوتیفیکیشن
+        public string Message { get; private set; }       // متن پیام
+        public DateTime CreatedAt { get; private set; }   // زمان ایجاد
+        public bool IsRead { get;private set; }          // آیا خوانده شده است؟
         public User? User { get; set; }    // ارتباط با جدول کاربران
-        public Guid CarId { get; set; }            // شناسه خودرو
-        public Guid CustomerId { get; set; }       // شناسه مشتری
+        
+        public Guid CarId { get; private set; }            // شناسه خودرو
+        public Guid BuyerId { get; private set; }       // شناسه مشتری
+
+        public void MarkAsRead()
+        {
+            IsRead = true;
+        }
+
+
     }
 }

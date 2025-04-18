@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Carproject.Model;
 using System.Drawing;
+using Domain.Model.File;
 
-namespace Domain.Model
+namespace Domain.Model.CarModel
 {
     public class Car
     {
@@ -14,7 +14,7 @@ namespace Domain.Model
 
         // کانستراکتور
         public Car(string brand, string model, int year, string color, decimal price, string vin,
-            CarStatus status, int categoryId, string name)
+            CarStatus status, Guid categoryId, string name)
         {
             Id = Guid.NewGuid();
             Brand = brand;
@@ -25,7 +25,7 @@ namespace Domain.Model
             VIN = vin;
             Status = status;
             CategoryId = categoryId;
-            Files = new List<FileBase>();
+            FilesIds ="";
             Name = name;
         }
         public enum CarStatus
@@ -46,17 +46,43 @@ namespace Domain.Model
         public decimal Price { get; private set; }
         public string VIN { get; private set; } // شماره شاسی
         public CarStatus Status { get; private set; }
-        public int CategoryId { get; private set; }
-         
+        public Guid CategoryId { get; private set; }
+
         [ForeignKey("CategoryId")]
         public CarCategory Category { get; private set; }
 
-        // اضافه کردن فیلد Files
-        public List<FileBase> Files { get; private set; } = new List<FileBase>(); // فرض بر این است که FileBase کلاسی از فایل‌ها باشد.
+        public string? FilesIds { get; private set; }
+        public List<string> FilesIdsList
+        {
+            get => string.IsNullOrWhiteSpace(FilesIds)
+        ? new List<string>()
+        : FilesIds.Split(',').ToList();
+
+            private set => FilesIds = string.Join(",", value);
+        }
 
         public Car()
         {
 
         }
+
+        public void AddFileId(Guid fileId)
+        {
+            var list = FilesIdsList;
+            list.Add(fileId.ToString());
+            FilesIds = string.Join(",", list);
+        }
+
+        public void SetFilesIds(List<string> fileIdsList)
+        {
+            FilesIds = string.Join(",", fileIdsList);  // تبدیل لیست به رشته‌ای که در دیتابیس ذخیره می‌شود.
+        }
+
+        public void AddVin(string vin)
+        {
+            VIN = vin;
+        }
+
+
     }
 }

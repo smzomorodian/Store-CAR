@@ -1,11 +1,7 @@
-﻿using Carproject.Model;
+﻿using Domain.Model.ReportNotifModel;
 using Infrustructure.Context;
 using Infrustructure.Repository.IRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrustructure.Repository
 {
@@ -17,23 +13,42 @@ namespace Infrustructure.Repository
         {
             _context = context;
         }
+
+        // پیاده‌سازی متد GetSaleByIdAsync
+        public async Task<Sale?> GetSaleByIdAsync(Guid saleId)
+        {
+            return await _context.Sales
+               .FirstOrDefaultAsync(s => s.Id == saleId);  // جستجو بر اساس saleId
+        }                  
+
+        // سایر متدهای Repository
+        public async Task<List<Sale>> GetAllSalesAsync()
+        {
+            return await _context.Sales
+                                 .ToListAsync();
+        }
+
         public async Task<Sale> AddSaleAsync(Sale sale)
         {
-            await _context.AddAsync(sale);
-            return (sale);
+            await _context.Sales.AddAsync(sale);
+            return sale;
         }
 
-        public async Task<Sale> GetBSaleByIdAsync(Guid selerId)
+        public async Task UpdateSaleAsync(Sale sale)
         {
-            var salepay = await _context.Sales.FindAsync(selerId);
-            return (salepay);
+            _context.Sales.Update(sale);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<Buyer> GetBuyerByIdAsync(Guid buyerId)
+        public async Task DeleteSaleAsync(Sale sale)
         {
-            var buyer = await _context.buyers.FindAsync(buyerId);
-            return buyer;
+            _context.Sales.Remove(sale);
+            await _context.SaveChangesAsync();
         }
 
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }
