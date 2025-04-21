@@ -184,7 +184,7 @@ namespace Carproject.Controllers
             {
                 customer.Id,
                 customer.Name,
-               
+
                 InterestedCategories = customer.InterestedCategories.Select(cc => new
                 {
                     cc.CategoryId,

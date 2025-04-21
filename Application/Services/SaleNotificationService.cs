@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.DTO;
+using Carproject.Services;
 using Domain.Model;
 using Domain.Model.ReportNotifModel;
 using Domain.Model.UserModel;
 using Infrustructure.Context;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
@@ -90,6 +92,11 @@ namespace Application.Services
         {
             var sale = await _context.Sales.FirstOrDefaultAsync(s => s.Id == saleId);
             if (sale == null) throw new Exception("فروش یافت نشد.");
+
+            if(sale.Ispay == false)
+            {
+                throw new Exception("not is Payd");
+            }
 
             var buyer = await _context.buyers.FirstOrDefaultAsync(c => c.Id == sale.BuyerId);
             if (buyer == null) throw new Exception("مشتری یافت نشد.");
