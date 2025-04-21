@@ -1,4 +1,5 @@
 ﻿using Application.DTO.CarDTO;
+using Application.Services;
 using Domain.Model.CarModel;
 using Domain.Model.File;
 using Domain.Model.ReportNotifModel;
@@ -6,6 +7,7 @@ using Domain.Model.UserModel;
 using Infrustructure.Repository.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
 
 namespace Store_CAR.Controllers
@@ -19,19 +21,22 @@ namespace Store_CAR.Controllers
         private readonly IFileRepository _fileRepository;
         private readonly IRepository<Buyer> _genericRepository;
         private readonly IUserInfoRepository<Buyer> _userInfoRepository;
+        private readonly ISaleNotificationService _saleNotificationService;
 
         public CarSaleController(
             ICarRepository carRepository,
             ISaleRepository saleRepository,
             IRepository<Buyer> genericRepository,
             IUserInfoRepository<Buyer> userInfoRepository,
-            IFileRepository fileRepository)
+            IFileRepository fileRepository,
+            ISaleNotificationService saleNotificationService)
         {
             _carRepository = carRepository;
             _saleRepository = saleRepository;
             _genericRepository = genericRepository;
             _userInfoRepository = userInfoRepository;
             _fileRepository = fileRepository;
+            _saleNotificationService = saleNotificationService;
         }
 
 
@@ -92,7 +97,7 @@ namespace Store_CAR.Controllers
             }
         }
 
-            [HttpPost("mark-as-pay")]
+        [HttpPost("mark-as-pay")]
         public async Task<IActionResult> MarkAsPaid(Guid saleId)
         {
             var sale = await _saleRepository.GetSaleByIdAsync(saleId);
@@ -103,6 +108,18 @@ namespace Store_CAR.Controllers
 
             return Ok("سفارش شما تایید شد.");
         }
+
+        //[HttpPost("Payment slip confirmation/{notificationId}")]
+        //public async Task<IActionResult> MarkAsRead(int notificationId)
+        //{
+        //    var notification = await _context.Notifications.FindAsync(notificationId);
+        //    if (notification == null) return NotFound();
+
+        //    notification.MarkAsRead();
+        //    await _genericRepository.SavechangeAsync();
+
+        //    return Ok("نوتیفیکیشن به عنوان خوانده‌شده علامت‌گذاری شد.");
+        //}
 
         [HttpPost("Sale/{saleId}/UploadFile")]
         public async Task<IActionResult> UploadFile(Guid saleId, IFormFile file)

@@ -41,6 +41,19 @@ namespace Carproject.Controllers
             }
         }
 
+        [HttpPost("payment-confirmation/{saleId}")]
+        public async Task<IActionResult> SendSaleConfirmationPayNotification(Guid saleId)
+        {
+            try
+            {
+                await _saleNotificationService.SendPaymentConfirmationNotificationAsync(saleId);
+                return Ok("نوتیفیکیشن و ایمیل با موفقیت ارسال شد.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("خطا: " + ex.Message);
+            }
+        }
 
         // گرفتن نوتیف مشتری
 

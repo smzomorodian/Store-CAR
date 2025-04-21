@@ -3,6 +3,7 @@ using Domain.Model.UserModel;
 using Domain.Model.ReportNotifModel;
 using Domain.Model.CarModel;
 using Domain.Model.File;
+using Domain.Model;
 
 namespace Infrustructure.Context
 {

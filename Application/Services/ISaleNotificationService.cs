@@ -9,6 +9,6 @@ namespace Application.Services
     public interface ISaleNotificationService
     {
         Task SendSaleNotificationAsync(Guid saleId);
-
+        Task SendPaymentConfirmationNotificationAsync(Guid saleId);
     }
 }

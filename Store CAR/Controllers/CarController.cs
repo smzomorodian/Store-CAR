@@ -52,10 +52,6 @@ namespace Carproject.Controllers
                 commandCar.CategoryId = defaultCategory.Id;
             }
 
-
-
-
-
             // بررسی اینکه آیا دسته‌بندی معتبر است
             if (!await _carRepository.IsCategoryValidAsync(commandCar.CategoryId))
                 return BadRequest(new { message = "Invalid CategoryId" });
@@ -72,8 +68,6 @@ namespace Carproject.Controllers
 
 
             var savedCar = await _carRepository.GetCarByIdAsync(car.Id);
-
-
 
             // نگاشت خودرو به CarDto برای پاسخ‌دهی
             var carDto = _mapper.Map<CarDto>(savedCar);

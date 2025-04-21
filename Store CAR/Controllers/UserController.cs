@@ -35,11 +35,12 @@ namespace Store_CAR.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("register/{userType}")]
-        public async Task<IActionResult> Register(string userType, [FromBody] RegisterbuyerDTO registerbuyerDTO)
+        //[HttpPost("register/{userType}")]
+        [HttpPost("registerUser")]
+        public async Task<IActionResult> Register([FromBody] RegisterbuyerDTO registerbuyerDTO)
         {
-            Type userClassType = null;
-            string userTypeClean = userType?.Trim().ToLower();
+            //Type userClassType = null;
+            string userTypeClean = registerbuyerDTO.Role?.Trim().ToLower();
             Guid result;
 
             switch (userTypeClean)
@@ -95,11 +96,12 @@ namespace Store_CAR.Controllers
             return Ok(new { Id = result });
         }
 
-        [HttpPost("Loginonestage/{userType}")]
+        //[HttpPost("Loginonestage/{userType}")]
+        [HttpPost("Login-One-Stage-User/{userType}")]
         public async Task<IActionResult> Login(string userType, [FromBody] LogingUserDTO logingUserDTO)
         {
             string Token;
-            string userTypeclean = userType;
+            string userTypeclean = userType.Trim().ToLower();
             switch (userTypeclean)
             {
                 case "buyer":
@@ -142,14 +144,33 @@ namespace Store_CAR.Controllers
             switch (userTypeClean)
             {
                 case "buyer":
+                    var checkUserBuyer = new checkUserwhitnationalcodeCommand<Buyer>(userType, nationalCode);
+                    var checkUserBuyerResult = await _mediator.Send(checkUserBuyer);
+                    if (checkUserBuyerResult == false)
+                    {
+                        return BadRequest("User Not Found");
+                    }
+
                     var commandbuyer = new RequestPasswordResetCommand<Buyer> { nationalCode = nationalCode };
                     otp = await _mediator.Send(commandbuyer);
                     break;
                 case "seller":
+                    var checkUserseller = new checkUserwhitnationalcodeCommand<Seller>(userType, nationalCode);
+                    var checkUserSellerResult = await _mediator.Send(checkUserseller);
+                    if (checkUserSellerResult == false)
+                    {
+                        return BadRequest("User Not Found");
+                    }
                     var commandseller = new RequestPasswordResetCommand<Seller> { nationalCode = nationalCode };
                     otp = await _mediator.Send(commandseller);
                     break;
                 case "moder":
+                    var checkUsermoder = new checkUserwhitnationalcodeCommand<Moder>(userType, nationalCode);
+                    var checkUsermoderResult = await _mediator.Send(checkUsermoder);
+                    if (checkUsermoderResult == false)
+                    {
+                        return BadRequest("User Not Found");
+                    }
                     var commandmoder = new RequestPasswordResetCommand<Moder> { nationalCode = nationalCode };
                     otp = await _mediator.Send(commandmoder);
                     break;
@@ -169,6 +190,12 @@ namespace Store_CAR.Controllers
             switch (userTypeClean)
             {
                 case "buyer":
+                    var checkuserbuyer = new checkUserwhitnationalcodeCommand<Buyer>(request.NationalCode, userType);
+                    var resultcheckuserbuyer = await _mediator.Send(checkuserbuyer);
+                    if(resultcheckuserbuyer == false)
+                    {
+                        return BadRequest("User Not Found");
+                    }
                     var commandbuyer = new ChangePasswordcommand<Buyer>
                     {
                         NationalCode = request.NationalCode,
@@ -178,6 +205,12 @@ namespace Store_CAR.Controllers
                     result = await _mediator.Send(commandbuyer);
                     break;
                 case "seller":
+                    var checkuserseller = new checkUserwhitnationalcodeCommand<Seller>(request.NationalCode, userType);
+                    var resultcheckuserseller = await _mediator.Send(checkuserseller);
+                    if (resultcheckuserseller == false)
+                    {
+                        return BadRequest("User Not Found");
+                    }
                     var commandseller = new ChangePasswordcommand<Seller>
                     {
                         NationalCode = request.NationalCode,
@@ -187,6 +220,12 @@ namespace Store_CAR.Controllers
                     result = await _mediator.Send(commandseller);
                     break;
                 case "moder":
+                    var checkusermoder = new checkUserwhitnationalcodeCommand<Moder>(request.NationalCode, userType);
+                    var resultcheckusermoder = await _mediator.Send(checkusermoder);
+                    if (resultcheckusermoder == false)
+                    {
+                        return BadRequest("User Not Found");
+                    }
                     var commandmoder = new ChangePasswordcommand<Moder>
                     {
                         NationalCode = request.NationalCode,
@@ -199,21 +238,33 @@ namespace Store_CAR.Controllers
                     return BadRequest("نوع کاربر نامعتبر است.");
             }
             return Ok("change passwod is succesfuly");
-
         }
-
         // Two-step authentication
         [HttpPost("request-otp")]
         public async Task<IActionResult> RequestOtp([FromBody] RequestOtpDTO request)
         {
-            if (request.UserType.ToLower() == "buyer")
+            if (request.UserType.Trim().ToLower() == "buyer")
             {
+                var commnad = new checkUserwhitPhoneNumberCommand<Buyer>(request.Phonenumber, request.UserType);
+                var commandcheck = await _mediator.Send(commnad);
+                if (commandcheck == false)
+                {
+                    return BadRequest("User Not Found");
+                }
+
                 var command = new RequestOtpCommand<Buyer>(request.UserType, request.Phonenumber);
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
-            else if (request.UserType.ToLower() == "seller")
+            else if (request.UserType.Trim().ToLower() == "seller")
             {
+                var commnad = new checkUserwhitPhoneNumberCommand<Seller>(request.Phonenumber, request.UserType);
+                var commandcheck = await _mediator.Send(commnad);
+                if (commandcheck == false)
+                {
+                    return BadRequest("User Not Found");
+                }
+
                 var command = new RequestOtpCommand<Seller>(request.UserType, request.Phonenumber);
                 var result = await _mediator.Send(command);
                 return Ok(result);
@@ -223,13 +274,13 @@ namespace Store_CAR.Controllers
         [HttpPost("verify-otp")]
         public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDTO verifyRequest)
         {
-            if (verifyRequest.UserType.ToLower() == "buyer")
+            if (verifyRequest.UserType.Trim().ToLower() == "buyer")
             {
                 var command = new VerifyOtpCommand<Buyer>(verifyRequest.UserType, verifyRequest.PhoneNumber, verifyRequest.otp);
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
-            if (verifyRequest.UserType.ToLower() == "seller")
+            if (verifyRequest.UserType.Trim().ToLower() == "seller")
             {
                 var command = new VerifyOtpCommand<Seller>(verifyRequest.UserType, verifyRequest.PhoneNumber, verifyRequest.otp);
                 var result = await _mediator.Send(command);
@@ -242,15 +293,15 @@ namespace Store_CAR.Controllers
         [HttpGet("checkUser")]
         public async Task<IActionResult> checkbuyer(string nationalcode, string UserType)
         {
-            if (UserType.ToLower() == "buyer")
+            if (UserType.Trim().ToLower() == "buyer")
             {
-                var command = new checkUserCommand<Buyer>(nationalcode, UserType);
+                var command = new checkUserwhitnationalcodeCommand<Buyer>(nationalcode, UserType);
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
-            if (UserType.ToLower() == "seller")
+            if (UserType.Trim().ToLower() == "seller")
             {
-                var command = new checkUserCommand<Seller>(nationalcode, UserType);
+                var command = new checkUserwhitnationalcodeCommand<Seller>(nationalcode, UserType);
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
@@ -260,8 +311,14 @@ namespace Store_CAR.Controllers
         [HttpPut("EditInformation")]
         public async Task<IActionResult> editinformation(string nationalcode, string UserType, [FromBody] RegisterbuyerDTO registerbuyerDTO)
         {
-            if (UserType.ToLower() == "buyer")
+            if (UserType.Trim().ToLower() == "buyer")
             {
+                var checkcommand = new checkUserwhitnationalcodeCommand<Buyer>(nationalcode, UserType);
+                var ckeckresult = await _mediator.Send(checkcommand);
+                if (ckeckresult == null)
+                {
+                    return BadRequest("Not found user");
+                }
                 var command = new EditInformationCommand<Buyer>()
                 {
                     Name = registerbuyerDTO.Name,
@@ -275,8 +332,14 @@ namespace Store_CAR.Controllers
                 var result = await _mediator.Send(command);
                 return Ok(result);
             }
-            if (UserType.ToLower() == "seller")
+            if (UserType.Trim().ToLower() == "seller")
             {
+                var checkcommand = new checkUserwhitnationalcodeCommand<Seller>(nationalcode, UserType);
+                var ckeckresult = await _mediator.Send(checkcommand);
+                if (ckeckresult == true)
+                {
+                    return BadRequest("Not found user");
+                }
                 var command = new EditInformationCommand<Seller>()
                 {
                     Name = registerbuyerDTO.Name,

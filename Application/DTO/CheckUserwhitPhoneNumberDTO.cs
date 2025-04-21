@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.DTO
 {
-    public class CheckUserDTO
+    public class CheckUserwhitPhoneNumberDTO
     {
-        public string nationalcode { get; set; }
+        public string Phonenumber { get; set; }
         public string UserType { get; set; }
     }
 }

@@ -86,5 +86,35 @@ namespace Application.Services
 
             await _emailService.SendEmailAsync(emailRequest);
         }
+        public async Task SendPaymentConfirmationNotificationAsync(Guid saleId)
+        {
+            var sale = await _context.Sales.FirstOrDefaultAsync(s => s.Id == saleId);
+            if (sale == null) throw new Exception("فروش یافت نشد.");
+
+            var buyer = await _context.buyers.FirstOrDefaultAsync(c => c.Id == sale.BuyerId);
+            if (buyer == null) throw new Exception("مشتری یافت نشد.");
+
+            // ایجاد نوتیفیکیشن تأیید پرداخت
+            var notification = new Notification(
+                "تأیید پرداخت",
+                $"پرداخت شما به مبلغ {sale.Amount} برای خرید با شناسه {sale.Id} با موفقیت انجام شد.",
+                DateTime.Now,
+                sale.CarId,
+                buyer.Id
+            );
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
+
+            // ارسال ایمیل تأیید پرداخت
+            var emailRequest = new Email
+            {
+                To = buyer.Email,
+                Subject = "تأیید پرداخت",
+                Body = $"<html><body><p>پرداخت شما به مبلغ <strong>{sale.Amount}</strong> با موفقیت انجام شد.</p><p>از خرید شما سپاسگزاریم 🙏</p></body></html>"
+            };
+
+            await _emailService.SendEmailAsync(emailRequest);
+        }
     }
 }
