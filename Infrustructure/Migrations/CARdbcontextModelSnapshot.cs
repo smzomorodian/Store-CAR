@@ -67,6 +67,9 @@ namespace Infrustructure.Migrations
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
+                    b.Property<int?>("stock")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");

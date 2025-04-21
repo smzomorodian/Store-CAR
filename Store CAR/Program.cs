@@ -156,12 +156,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+//---------------------------
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 var dbcontext = services.GetRequiredService<CARdbcontext>();
 dbcontext.Database.EnsureCreated();
 dbcontext.Database.Migrate();
-
+//---------------------------
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

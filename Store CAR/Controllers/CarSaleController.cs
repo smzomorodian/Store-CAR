@@ -82,14 +82,26 @@ namespace Store_CAR.Controllers
                     return NotFound("خریدار با این شناسه پیدا نشد.");
                 }
 
+                //c;
+                //return Ok("نوتیفیکیشن و ایمیل با موفقیت ارسال شد.");
+
+
                 var sale = new Sale(DateTime.Now, car.Price, buyCarDto.BuyerId, buyCarDto.CarId, false);
                 var createdSale = await _saleRepository.AddSaleAsync(sale);
                 await _genericRepository.SavechangeAsync();
-
+                
                 car.SetStatus(Car.CarStatus.Sold);
                 await _carRepository.UpdateCarAsync(car);
 
-                return Ok(new { Message = "خرید موفقیت‌آمیز بود.", Sale = createdSale });
+                await _saleNotificationService.SendSaleNotificationAsync(sale.Id);
+                //-----------------
+                return Ok(new
+                {
+                    NotificationMessage = "نوتیفیکیشن و ایمیل با موفقیت ارسال شد.",
+                    PurchaseMessage = "خرید موفقیت‌آمیز بود.",
+                    Sale = createdSale
+                });
+                //-----------------
             }
             catch (Exception ex)
             {

@@ -14,7 +14,7 @@ namespace Domain.Model.CarModel
 
         // کانستراکتور
         public Car(string brand, string model, int year, string color, decimal price, string vin,
-            CarStatus status, Guid categoryId, string name)
+            CarStatus status, Guid categoryId, string name , int stock)
         {
             Id = Guid.NewGuid();
             Brand = brand;
@@ -22,11 +22,12 @@ namespace Domain.Model.CarModel
             Year = year;
             Color = color;
             Price = price;
-            VIN = vin;
+            VIN = vin.ToUpper().Trim();
             Status = status;
             CategoryId = categoryId;
             FilesIds ="";
             Name = name;
+            Stock = stock;
         }
         public enum CarStatus
         {
@@ -47,6 +48,7 @@ namespace Domain.Model.CarModel
         public string VIN { get; private set; } // شماره شاسی
         public CarStatus Status { get; private set; }
         public Guid CategoryId { get; private set; }
+        public int? Stock { get; private set; }
 
         [ForeignKey("CategoryId")]
         public CarCategory Category { get; private set; }
