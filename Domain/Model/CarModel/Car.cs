@@ -60,7 +60,7 @@ namespace Domain.Model.CarModel
         ? new List<string>()
         : FilesIds.Split(',').ToList();
 
-            private set => FilesIds = string.Join(",", value);
+            private set => FilesIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public Car()
@@ -70,6 +70,9 @@ namespace Domain.Model.CarModel
 
         public void AddFileId(Guid fileId)
         {
+            if (fileId == Guid.Empty)
+                throw new ArgumentException("آیدی فایل نمی‌تواند خالی باشد.");
+
             var list = FilesIdsList;
             list.Add(fileId.ToString());
             FilesIds = string.Join(",", list);
@@ -77,6 +80,9 @@ namespace Domain.Model.CarModel
 
         public void SetFilesIds(List<string> fileIdsList)
         {
+            if (fileIdsList == null || fileIdsList.Any(string.IsNullOrWhiteSpace))
+                throw new ArgumentException("آیدی فایل‌ها نمی‌توانند نال یا خالی باشند.");
+
             FilesIds = string.Join(",", fileIdsList);  // تبدیل لیست به رشته‌ای که در دیتابیس ذخیره می‌شود.
         }
 

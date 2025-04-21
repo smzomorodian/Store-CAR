@@ -10,10 +10,9 @@ namespace Domain.Model.File
         {
         }
 
-        public FileBase(string fileName, string filePath
-
-            )
+        public FileBase(string fileName, string filePath)
         {
+            Id = Guid.NewGuid();
             FileName = fileName;
             FilePath = filePath;
 
